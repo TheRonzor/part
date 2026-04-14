@@ -4,24 +4,374 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Parametric Art Studio</title>
-    <link rel="stylesheet" href="./css/base.css" />
-    <link id="theme-link" rel="stylesheet" href="./css/theme-default.css" />
+    <style>
+      :root {
+        --bg: #0d1016;
+        --panel: #141923;
+        --panel-2: #1a2130;
+        --panel-3: #222c3f;
+        --border: rgba(255, 255, 255, 0.09);
+        --text: #eef2ff;
+        --muted: #aeb8cf;
+        --accent: #79a8ff;
+        --accent-2: #8ae6c6;
+        --danger: #ff7b91;
+        --shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+        --radius: 18px;
+        --radius-sm: 12px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        background: linear-gradient(180deg, #0b0f16, #0f1420 55%, #0b1018);
+        color: var(--text);
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      body {
+        padding: 22px;
+      }
+      .app {
+        max-width: 1540px;
+        margin: 0 auto;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 16px;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: clamp(1.6rem, 2.6vw, 2.3rem);
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+      .header p {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 0.98rem;
+      }
+      .quick-create {
+        background: rgba(20, 25, 35, 0.82);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(10px);
+        margin-bottom: 18px;
+      }
+      .qc-row {
+        display: grid;
+        gap: 12px;
+        padding: 8px 0;
+      }
+      .qc-row + .qc-row {
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .qc-row.row-presets {
+        grid-template-columns: repeat(5, minmax(160px, 1fr));
+      }
+      .qc-row.row-shared {
+        grid-template-columns: repeat(4, minmax(180px, 1fr));
+        max-width: 980px;
+        margin: 0 auto;
+      }
+      .qc-row.row-actions {
+        grid-template-columns: repeat(4, minmax(160px, 1fr));
+      }
+      .main {
+        display: grid;
+        grid-template-columns: minmax(400px, 0.5fr) 430px;
+        gap: 18px;
+        align-items: start;
+      }
+      .preview-card,
+      .controls-card {
+        background: rgba(20, 25, 35, 0.82);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(10px);
+      }
+      .preview-card {
+        padding: 14px;
+      }
+      .preview-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+      .preview-top h2 {
+        font-size: 1.02rem;
+        margin: 0;
+        font-weight: 600;
+      }
+      .preview-meta {
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+      .preview-wrap {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1/1;
+        background: #090c12;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      canvas#preview {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .controls-card {
+        padding: 14px;
+      }
+      .sticky {
+        position: sticky;
+        top: 18px;
+      }
+      .control-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+      .control {
+        display: grid;
+        gap: 7px;
+        min-width: 0;
+      }
+      .control label,
+      .inline-label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.88rem;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .control input[type="range"] {
+        width: 100%;
+      }
+      .control input[type="number"],
+      .control select,
+      .control input[type="color"] {
+        width: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text);
+        padding: 10px 12px;
+        font: inherit;
+      }
+      .control input[type="number"]::-webkit-outer-spin-button,
+      .control input[type="number"]::-webkit-inner-spin-button {
+        opacity: 1;
+      }
+      .control input[type="color"] {
+        padding: 6px;
+        min-height: 42px;
+      }
+      .readout {
+        color: var(--text);
+        font-variant-numeric: tabular-nums;
+      }
+      .button-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      .button-row.single {
+        grid-template-columns: 1fr;
+      }
+      button {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.08),
+          rgba(255, 255, 255, 0.02)
+        );
+        color: var(--text);
+        font: inherit;
+        padding: 10px 14px;
+        cursor: pointer;
+        transition:
+          transform 0.12s ease,
+          border-color 0.12s ease,
+          background 0.12s ease;
+      }
+      button:hover {
+        transform: translateY(-1px);
+        border-color: rgba(255, 255, 255, 0.18);
+      }
+      button.primary {
+        background: linear-gradient(
+          180deg,
+          rgba(121, 168, 255, 0.34),
+          rgba(121, 168, 255, 0.16)
+        );
+        border-color: rgba(121, 168, 255, 0.38);
+      }
+      button.success {
+        background: linear-gradient(
+          180deg,
+          rgba(138, 230, 198, 0.28),
+          rgba(138, 230, 198, 0.12)
+        );
+        border-color: rgba(138, 230, 198, 0.34);
+      }
+      details {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        padding: 0 12px;
+        margin-top: 12px;
+        overflow: hidden;
+      }
+      details[open] {
+        background: rgba(255, 255, 255, 0.045);
+      }
+      summary {
+        list-style: none;
+        cursor: pointer;
+        padding: 13px 0;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      summary::-webkit-details-marker {
+        display: none;
+      }
+      summary::after {
+        content: "+";
+        color: var(--muted);
+        font-size: 1.1rem;
+      }
+      details[open] summary::after {
+        content: "–";
+      }
+      .panel-body {
+        padding: 0 0 14px;
+        display: grid;
+        gap: 12px;
+      }
+      .subgroup {
+        display: grid;
+        gap: 10px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
+      }
+      .subgroup-title {
+        font-size: 0.8rem;
+        letter-spacing: 0.05em;
+        color: var(--muted);
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+      .palette-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .palette-grid .control {
+        min-width: 0;
+      }
+      .inline-check {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 8px 0 2px;
+        color: var(--muted);
+        font-size: 0.88rem;
+        font-weight: 600;
+      }
+      .mode-select {
+        display: grid;
+        gap: 10px;
+      }
+      .status {
+        margin-top: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--muted);
+        padding: 12px 14px;
+        border-radius: 14px;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+      }
+      .status.good {
+        border-color: rgba(138, 230, 198, 0.22);
+        color: #dcfff3;
+      }
+      .status.warn {
+        border-color: rgba(255, 123, 145, 0.22);
+        color: #ffe0e6;
+      }
+      .muted-note {
+        color: var(--muted);
+        font-size: 0.82rem;
+        line-height: 1.4;
+      }
+      .hidden {
+        display: none !important;
+      }
+      @media (max-width: 1180px) {
+        .main {
+          grid-template-columns: 1fr;
+        }
+        .sticky {
+          position: static;
+        }
+      }
+      @media (max-width: 920px) {
+        .qc-row.row-presets {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .qc-row.row-shared {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .qc-row.row-actions {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .palette-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 560px) {
+        body {
+          padding: 14px;
+        }
+        .qc-row.row-presets,
+        .qc-row.row-shared,
+        .qc-row.row-actions,
+        .control-grid-2,
+        .button-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
   </head>
   <body>
     <div class="app">
       <div class="header">
-        <div class="theme-slot">
-          <select
-            id="theme_select"
-            class="theme-select"
-            aria-label="Select theme"
-          >
-            <option value="default" selected>default</option>
-            <option value="aurora">aurora</option>
-            <option value="ember">ember</option>
-            <option value="noir">noir</option>
-          </select>
-        </div>
         <h1>Parametric Art Studio</h1>
         <p>
           If you don't know what to do, then click on the randomize buttons and
@@ -1262,13 +1612,6 @@
       const statusEl = document.getElementById("status");
       const previewMeta = document.getElementById("preview_meta");
       const previewWrap = document.querySelector(".preview-wrap");
-      const themeLinkEl = document.getElementById("theme-link");
-      const THEME_FILES = {
-        default: "./css/theme-default.css",
-        aurora: "./css/theme-aurora.css",
-        ember: "./css/theme-ember.css",
-        noir: "./css/theme-noir.css",
-      };
 
       let state = validateSettings(deepClone(DATA.DEFAULT_SETTINGS));
       let isSyncing = false;
@@ -1292,20 +1635,6 @@
         return String(s)
           .replace(/_/g, " ")
           .replace(/\b\w/g, (m) => m.toUpperCase());
-      }
-      function applyTheme(themeName) {
-        const nextTheme = Object.prototype.hasOwnProperty.call(
-          THEME_FILES,
-          themeName,
-        )
-          ? themeName
-          : "default";
-        themeLinkEl.href = THEME_FILES[nextTheme];
-        document.documentElement.setAttribute("data-theme", nextTheme);
-        $("theme_select").value = nextTheme;
-      }
-      function handleThemeChange() {
-        applyTheme($("theme_select").value);
       }
       function nowTimestampStr() {
         const d = new Date();
@@ -3190,7 +3519,6 @@
         });
         $("btn_save_png").addEventListener("click", saveCurrentPng);
         $("btn_save_svg").addEventListener("click", saveCurrentSvg);
-        $("theme_select").addEventListener("change", handleThemeChange);
 
         new ResizeObserver(() => scheduleRender()).observe(previewWrap);
         window.addEventListener("resize", scheduleRender);
@@ -3198,7 +3526,6 @@
 
       populateSelects();
       connectEvents();
-      applyTheme("default");
       writeStateToUI();
       scheduleRender();
       setStatus("Ready.");
