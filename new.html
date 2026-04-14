@@ -1,0 +1,3207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Parametric Art Studio</title>
+    <link rel="stylesheet" href="./css/base.css" />
+    <link id="theme-link" rel="stylesheet" href="./css/theme-default.css" />
+  </head>
+  <body>
+    <div class="app">
+      <div class="header">
+        <div class="theme-slot">
+          <select
+            id="theme_select"
+            class="theme-select"
+            aria-label="Select theme"
+          >
+            <option value="default" selected>default</option>
+            <option value="aurora">aurora</option>
+            <option value="ember">ember</option>
+            <option value="noir">noir</option>
+          </select>
+        </div>
+        <h1>Parametric Art Studio</h1>
+        <p>
+          If you don't know what to do, then click on the randomize buttons and
+          play with stuff until you figure out what to do.
+        </p>
+      </div>
+
+      <section class="quick-create">
+        <div class="qc-row row-presets">
+          <div class="control">
+            <label for="artwork_preset">Artwork preset</label
+            ><select id="artwork_preset"></select>
+          </div>
+          <div class="control">
+            <label for="family">Family</label
+            ><select id="family"></select>
+          </div>
+          <div class="control">
+            <label for="palette_preset">Palette preset</label
+            ><select id="palette_preset"></select>
+          </div>
+          <div class="control">
+            <label for="style_preset">Style preset</label
+            ><select id="style_preset"></select>
+          </div>
+          <div class="control">
+            <label for="background_preset">Background preset</label
+            ><select id="background_preset"></select>
+          </div>
+        </div>
+        <div class="qc-row row-shared">
+          <div class="control">
+            <label for="zoom"
+              >Zoom
+              <span
+                class="readout"
+                data-output-for="zoom"
+                data-decimals="2"
+              ></span
+            ></label>
+            <input id="zoom" type="range" min="0.5" max="2" step="0.01" />
+          </div>
+          <div class="control">
+            <label for="turns"
+              >Turns
+              <span
+                class="readout"
+                data-output-for="turns"
+                data-decimals="2"
+              ></span
+            ></label>
+            <input id="turns" type="range" min="0.5" max="12" step="0.1" />
+          </div>
+          <div class="control">
+            <label for="noise_strength"
+              >Noise
+              <span
+                class="readout"
+                data-output-for="noise_strength"
+                data-decimals="4"
+              ></span
+            ></label>
+            <input
+              id="noise_strength"
+              type="range"
+              min="0"
+              max="0.05"
+              step="0.0005"
+            />
+          </div>
+          <div class="control">
+            <label for="asymmetry"
+              >Asymmetry
+              <span
+                class="readout"
+                data-output-for="asymmetry"
+                data-decimals="3"
+              ></span
+            ></label>
+            <input id="asymmetry" type="range" min="0" max="0.5" step="0.005" />
+          </div>
+        </div>
+        <div class="qc-row row-actions">
+          <button id="btn_randomize_all" class="primary">Randomize All</button>
+          <button id="btn_randomize_curve">Randomize Curve</button>
+          <button id="btn_randomize_colors">Randomize Colors</button>
+          <button id="btn_randomize_background">Randomize BG</button>
+        </div>
+      </section>
+
+      <section class="main">
+        <div class="preview-card">
+          <div class="preview-top">
+            <h2>Artwork Preview</h2>
+            <div class="preview-meta" id="preview_meta">
+              Seed 7 · lissajous · nebula
+            </div>
+          </div>
+          <div class="preview-wrap">
+            <canvas id="preview"></canvas>
+          </div>
+          <div class="status" id="status">Ready.</div>
+        </div>
+
+        <div class="controls-card sticky">
+          <div class="control-grid-2">
+            <div class="control">
+              <label for="glow_macro"
+                >Glow
+                <span
+                  class="readout"
+                  data-output-for="glow_macro"
+                  data-decimals="2"
+                ></span
+              ></label>
+              <input id="glow_macro" type="range" min="0" max="1" step="0.01" />
+            </div>
+            <div class="control">
+              <label for="seed">Seed</label>
+              <input id="seed" type="number" min="0" max="9999" step="1" />
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button id="btn_save_png" class="success">Save PNG</button>
+            <button id="btn_save_svg">Save SVG</button>
+          </div>
+
+          <details>
+            <summary>Curve Details</summary>
+            <div class="panel-body">
+              <div id="curve_box_lissajous" class="subgroup">
+                <div class="subgroup-title">Lissajous</div>
+                <div class="control">
+                  <label for="liss_a"
+                    >A frequency
+                    <span
+                      class="readout"
+                      data-output-for="liss_a"
+                      data-decimals="0"
+                    ></span></label
+                  ><input id="liss_a" type="range" min="1" max="12" step="1" />
+                </div>
+                <div class="control">
+                  <label for="liss_b"
+                    >B frequency
+                    <span
+                      class="readout"
+                      data-output-for="liss_b"
+                      data-decimals="0"
+                    ></span></label
+                  ><input id="liss_b" type="range" min="1" max="12" step="1" />
+                </div>
+                <div class="control">
+                  <label for="liss_delta"
+                    >Phase
+                    <span
+                      class="readout"
+                      data-output-for="liss_delta"
+                      data-decimals="2"
+                    ></span></label
+                  ><input
+                    id="liss_delta"
+                    type="range"
+                    min="0"
+                    max="6.283185307179586"
+                    step="0.01"
+                  />
+                </div>
+              </div>
+              <div id="curve_box_rose" class="subgroup">
+                <div class="subgroup-title">Rose</div>
+                <div class="control">
+                  <label for="rose_k"
+                    >Petal k
+                    <span
+                      class="readout"
+                      data-output-for="rose_k"
+                      data-decimals="0"
+                    ></span></label
+                  ><input id="rose_k" type="range" min="1" max="16" step="1" />
+                </div>
+                <div class="control">
+                  <label for="rose_radial_wobble"
+                    >Radial wobble
+                    <span
+                      class="readout"
+                      data-output-for="rose_radial_wobble"
+                      data-decimals="3"
+                    ></span></label
+                  ><input
+                    id="rose_radial_wobble"
+                    type="range"
+                    min="0"
+                    max="0.5"
+                    step="0.005"
+                  />
+                </div>
+                <div class="control">
+                  <label for="rose_wobble_freq"
+                    >Wobble frequency
+                    <span
+                      class="readout"
+                      data-output-for="rose_wobble_freq"
+                      data-decimals="0"
+                    ></span></label
+                  ><input
+                    id="rose_wobble_freq"
+                    type="range"
+                    min="1"
+                    max="20"
+                    step="1"
+                  />
+                </div>
+              </div>
+              <div id="curve_box_epitrochoid" class="subgroup">
+                <div class="subgroup-title">Epitrochoid</div>
+                <div class="control">
+                  <label for="epi_R"
+                    >Outer R
+                    <span
+                      class="readout"
+                      data-output-for="epi_R"
+                      data-decimals="0"
+                    ></span></label
+                  ><input id="epi_R" type="range" min="1" max="12" step="1" />
+                </div>
+                <div class="control">
+                  <label for="epi_r"
+                    >Inner r
+                    <span
+                      class="readout"
+                      data-output-for="epi_r"
+                      data-decimals="0"
+                    ></span></label
+                  ><input id="epi_r" type="range" min="1" max="12" step="1" />
+                </div>
+                <div class="control">
+                  <label for="epi_d"
+                    >Offset d
+                    <span
+                      class="readout"
+                      data-output-for="epi_d"
+                      data-decimals="2"
+                    ></span></label
+                  ><input id="epi_d" type="range" min="0" max="12" step="0.1" />
+                </div>
+              </div>
+              <div id="curve_box_burst" class="subgroup">
+                <div class="subgroup-title">Burst</div>
+                <div class="control">
+                  <label for="burst_amp1"
+                    >Amp 1
+                    <span
+                      class="readout"
+                      data-output-for="burst_amp1"
+                      data-decimals="2"
+                    ></span></label
+                  ><input
+                    id="burst_amp1"
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                  />
+                </div>
+                <div class="control">
+                  <label for="burst_amp2"
+                    >Amp 2
+                    <span
+                      class="readout"
+                      data-output-for="burst_amp2"
+                      data-decimals="2"
+                    ></span></label
+                  ><input
+                    id="burst_amp2"
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                  />
+                </div>
+                <div class="control">
+                  <label for="burst_f1"
+                    >Freq 1
+                    <span
+                      class="readout"
+                      data-output-for="burst_f1"
+                      data-decimals="0"
+                    ></span></label
+                  ><input
+                    id="burst_f1"
+                    type="range"
+                    min="1"
+                    max="30"
+                    step="1"
+                  />
+                </div>
+                <div class="control">
+                  <label for="burst_f2"
+                    >Freq 2
+                    <span
+                      class="readout"
+                      data-output-for="burst_f2"
+                      data-decimals="0"
+                    ></span></label
+                  ><input
+                    id="burst_f2"
+                    type="range"
+                    min="1"
+                    max="30"
+                    step="1"
+                  />
+                </div>
+                <div class="control">
+                  <label for="burst_delta"
+                    >Phase
+                    <span
+                      class="readout"
+                      data-output-for="burst_delta"
+                      data-decimals="2"
+                    ></span></label
+                  ><input
+                    id="burst_delta"
+                    type="range"
+                    min="0"
+                    max="6.283185307179586"
+                    step="0.01"
+                  />
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary>Color &amp; Palette</summary>
+            <div class="panel-body">
+              <div class="control">
+                <label for="color_mode">Mode</label
+                ><select id="color_mode"></select>
+              </div>
+
+              <div id="color_box_palette" class="subgroup">
+                <div class="subgroup-title">Palette</div>
+                <div class="control">
+                  <label for="palette_name">Palette</label
+                  ><select id="palette_name"></select>
+                </div>
+                <div class="control">
+                  <label for="palette_distribution">Distribution</label
+                  ><select id="palette_distribution"></select>
+                </div>
+                <label class="inline-check"
+                  ><span>Manual palette</span
+                  ><input id="palette_manual_enabled" type="checkbox"
+                /></label>
+                <div id="palette_manual_block">
+                  <div class="control">
+                    <label for="palette_size"
+                      >Palette size
+                      <span
+                        class="readout"
+                        data-output-for="palette_size"
+                        data-decimals="0"
+                      ></span></label
+                    ><input
+                      id="palette_size"
+                      type="range"
+                      min="2"
+                      max="6"
+                      step="1"
+                    />
+                  </div>
+                  <div class="palette-grid">
+                    <div class="control" id="palette_color_wrap_1">
+                      <label for="palette_color_1">Color 1</label
+                      ><input id="palette_color_1" type="color" />
+                    </div>
+                    <div class="control" id="palette_color_wrap_2">
+                      <label for="palette_color_2">Color 2</label
+                      ><input id="palette_color_2" type="color" />
+                    </div>
+                    <div class="control" id="palette_color_wrap_3">
+                      <label for="palette_color_3">Color 3</label
+                      ><input id="palette_color_3" type="color" />
+                    </div>
+                    <div class="control" id="palette_color_wrap_4">
+                      <label for="palette_color_4">Color 4</label
+                      ><input id="palette_color_4" type="color" />
+                    </div>
+                    <div class="control" id="palette_color_wrap_5">
+                      <label for="palette_color_5">Color 5</label
+                      ><input id="palette_color_5" type="color" />
+                    </div>
+                    <div class="control" id="palette_color_wrap_6">
+                      <label for="palette_color_6">Color 6</label
+                      ><input id="palette_color_6" type="color" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="color_box_colormap" class="subgroup">
+                <div class="subgroup-title">Colormap</div>
+                <div class="control">
+                  <label for="colormap">Colormap</label
+                  ><select id="colormap"></select>
+                </div>
+                <div class="control">
+                  <label for="colormap_span_lo"
+                    >Span low
+                    <span
+                      class="readout"
+                      data-output-for="colormap_span_lo"
+                      data-decimals="2"
+                    ></span></label
+                  ><input
+                    id="colormap_span_lo"
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                  />
+                </div>
+                <div class="control">
+                  <label for="colormap_span_hi"
+                    >Span high
+                    <span
+                      class="readout"
+                      data-output-for="colormap_span_hi"
+                      data-decimals="2"
+                    ></span></label
+                  ><input
+                    id="colormap_span_hi"
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                  />
+                </div>
+              </div>
+
+              <div class="control">
+                <label for="curve_opacity"
+                  >Curve opacity
+                  <span
+                    class="readout"
+                    data-output-for="curve_opacity"
+                    data-decimals="2"
+                  ></span></label
+                ><input
+                  id="curve_opacity"
+                  type="range"
+                  min="0.1"
+                  max="1"
+                  step="0.01"
+                />
+              </div>
+              <div class="control">
+                <label for="num_curve_colors"
+                  >Curve colors
+                  <span
+                    class="readout"
+                    data-output-for="num_curve_colors"
+                    data-decimals="0"
+                  ></span></label
+                ><input
+                  id="num_curve_colors"
+                  type="range"
+                  min="1"
+                  max="12"
+                  step="1"
+                />
+              </div>
+              <div class="control">
+                <label for="color_shift"
+                  >Color shift
+                  <span
+                    class="readout"
+                    data-output-for="color_shift"
+                    data-decimals="2"
+                  ></span></label
+                ><input
+                  id="color_shift"
+                  type="range"
+                  min="-0.5"
+                  max="0.5"
+                  step="0.01"
+                />
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary>Background</summary>
+            <div class="panel-body">
+              <div class="control">
+                <label for="background_mode">Background mode</label
+                ><select id="background_mode"></select>
+              </div>
+
+              <div id="bg_box_solid" class="subgroup">
+                <div class="subgroup-title">Solid</div>
+                <div class="control">
+                  <label for="bg_solid_color">Color</label
+                  ><input id="bg_solid_color" type="color" />
+                </div>
+              </div>
+              <div id="bg_box_linear" class="subgroup">
+                <div class="subgroup-title">Linear</div>
+                <div class="control">
+                  <label for="bg_linear_top">Top</label
+                  ><input id="bg_linear_top" type="color" />
+                </div>
+                <div class="control">
+                  <label for="bg_linear_bottom">Bottom</label
+                  ><input id="bg_linear_bottom" type="color" />
+                </div>
+                <div class="control">
+                  <label for="bg_linear_angle"
+                    >Angle
+                    <span
+                      class="readout"
+                      data-output-for="bg_linear_angle"
+                      data-decimals="0"
+                    ></span></label
+                  ><input
+                    id="bg_linear_angle"
+                    type="range"
+                    min="0"
+                    max="180"
+                    step="1"
+                  />
+                </div>
+              </div>
+              <div id="bg_box_radial" class="subgroup">
+                <div class="subgroup-title">Radial</div>
+                <div class="control">
+                  <label for="bg_radial_inner">Inner</label
+                  ><input id="bg_radial_inner" type="color" />
+                </div>
+                <div class="control">
+                  <label for="bg_radial_outer">Outer</label
+                  ><input id="bg_radial_outer" type="color" />
+                </div>
+                <div class="control">
+                  <label for="bg_radial_center_x"
+                    >Center X
+                    <span
+                      class="readout"
+                      data-output-for="bg_radial_center_x"
+                      data-decimals="2"
+                    ></span></label
+                  ><input
+                    id="bg_radial_center_x"
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                  />
+                </div>
+                <div class="control">
+                  <label for="bg_radial_center_y"
+                    >Center Y
+                    <span
+                      class="readout"
+                      data-output-for="bg_radial_center_y"
+                      data-decimals="2"
+                    ></span></label
+                  ><input
+                    id="bg_radial_center_y"
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                  />
+                </div>
+                <div class="control">
+                  <label for="bg_radial_radius_bias"
+                    >Radius bias
+                    <span
+                      class="readout"
+                      data-output-for="bg_radial_radius_bias"
+                      data-decimals="2"
+                    ></span></label
+                  ><input
+                    id="bg_radial_radius_bias"
+                    type="range"
+                    min="0.25"
+                    max="2"
+                    step="0.01"
+                  />
+                </div>
+              </div>
+              <div id="bg_box_mesh" class="subgroup">
+                <div class="subgroup-title">Mesh</div>
+                <div class="control">
+                  <label for="bg_mesh_tl">Top left</label
+                  ><input id="bg_mesh_tl" type="color" />
+                </div>
+                <div class="control">
+                  <label for="bg_mesh_tr">Top right</label
+                  ><input id="bg_mesh_tr" type="color" />
+                </div>
+                <div class="control">
+                  <label for="bg_mesh_bl">Bottom left</label
+                  ><input id="bg_mesh_bl" type="color" />
+                </div>
+                <div class="control">
+                  <label for="bg_mesh_br">Bottom right</label
+                  ><input id="bg_mesh_br" type="color" />
+                </div>
+              </div>
+
+              <div class="control">
+                <label for="bg_brightness"
+                  >Brightness
+                  <span
+                    class="readout"
+                    data-output-for="bg_brightness"
+                    data-decimals="2"
+                  ></span></label
+                ><input
+                  id="bg_brightness"
+                  type="range"
+                  min="0.5"
+                  max="1.5"
+                  step="0.01"
+                />
+              </div>
+              <div class="control">
+                <label for="bg_contrast"
+                  >Contrast
+                  <span
+                    class="readout"
+                    data-output-for="bg_contrast"
+                    data-decimals="2"
+                  ></span></label
+                ><input
+                  id="bg_contrast"
+                  type="range"
+                  min="0.5"
+                  max="1.5"
+                  step="0.01"
+                />
+              </div>
+              <div class="control">
+                <label for="bg_texture_strength"
+                  >Texture
+                  <span
+                    class="readout"
+                    data-output-for="bg_texture_strength"
+                    data-decimals="3"
+                  ></span></label
+                ><input
+                  id="bg_texture_strength"
+                  type="range"
+                  min="0"
+                  max="0.25"
+                  step="0.005"
+                />
+              </div>
+              <div class="control">
+                <label for="bg_vignette_strength"
+                  >Vignette
+                  <span
+                    class="readout"
+                    data-output-for="bg_vignette_strength"
+                    data-decimals="2"
+                  ></span></label
+                ><input
+                  id="bg_vignette_strength"
+                  type="range"
+                  min="0"
+                  max="0.8"
+                  step="0.01"
+                />
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary>Render Style</summary>
+            <div class="panel-body">
+              <div class="control">
+                <label for="line_width"
+                  >Line width
+                  <span
+                    class="readout"
+                    data-output-for="line_width"
+                    data-decimals="2"
+                  ></span></label
+                ><input
+                  id="line_width"
+                  type="range"
+                  min="0.3"
+                  max="5"
+                  step="0.01"
+                />
+              </div>
+              <div class="control">
+                <label for="glow_layers"
+                  >Glow layers
+                  <span
+                    class="readout"
+                    data-output-for="glow_layers"
+                    data-decimals="0"
+                  ></span></label
+                ><input
+                  id="glow_layers"
+                  type="range"
+                  min="0"
+                  max="20"
+                  step="1"
+                />
+              </div>
+              <div class="control">
+                <label for="glow_alpha"
+                  >Glow alpha
+                  <span
+                    class="readout"
+                    data-output-for="glow_alpha"
+                    data-decimals="3"
+                  ></span></label
+                ><input
+                  id="glow_alpha"
+                  type="range"
+                  min="0"
+                  max="0.2"
+                  step="0.001"
+                />
+              </div>
+              <div class="control">
+                <label for="glow_scale"
+                  >Glow scale
+                  <span
+                    class="readout"
+                    data-output-for="glow_scale"
+                    data-decimals="2"
+                  ></span></label
+                ><input
+                  id="glow_scale"
+                  type="range"
+                  min="1"
+                  max="6"
+                  step="0.01"
+                />
+              </div>
+              <div class="control">
+                <label for="main_alpha"
+                  >Main alpha
+                  <span
+                    class="readout"
+                    data-output-for="main_alpha"
+                    data-decimals="2"
+                  ></span></label
+                ><input
+                  id="main_alpha"
+                  type="range"
+                  min="0.1"
+                  max="1"
+                  step="0.01"
+                />
+              </div>
+              <label class="inline-check"
+                ><span>Mystery Switch</span
+                ><input id="segment_blending" type="checkbox"
+              /></label>
+            </div>
+          </details>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      const DATA = {
+        FAMILY_OPTIONS: [
+          ["Lissajous", "lissajous"],
+          ["Rose", "rose"],
+          ["Epitrochoid", "epitrochoid"],
+          ["Burst", "burst"],
+        ],
+        COLOR_MODE_OPTIONS: [
+          ["Palette", "palette"],
+          ["Colormap", "colormap"],
+        ],
+        BACKGROUND_MODE_OPTIONS: [
+          ["Solid", "solid"],
+          ["Linear", "linear"],
+          ["Radial", "radial"],
+          ["Mesh", "mesh"],
+        ],
+        PALETTE_DISTRIBUTION_OPTIONS: [
+          ["Even Segments", "even_segments"],
+          ["Weighted", "weighted"],
+          ["Gradient Blend", "gradient_blend"],
+        ],
+        DEFAULT_RANDOMIZATION_INTENSITY: "moderate",
+        CURATED_COLORMAPS: [
+          "winter",
+          "spring",
+          "summer",
+          "autumn",
+          "viridis",
+          "plasma",
+          "cividis",
+          "cool",
+          "twilight",
+          "turbo",
+          "hsv",
+          "jet",
+        ],
+        POINTS: 10000,
+        PALETTE_PRESETS: {
+          custom: [],
+          nebula: ["#8fd3ff", "#bf8fff", "#ffffff"],
+          aurora: ["#72f1b8", "#7ea8ff", "#d9a7ff"],
+          ember: ["#ffb347", "#ff7043", "#fff1cc"],
+          sunset_bloom: ["#ff8fa3", "#ffc6a5", "#ffe8d6"],
+          ice_mono: ["#dff6ff", "#89c2ff", "#5a87ff"],
+          noir_neon: ["#f5f5f5", "#ff00aa", "#101010"],
+          gold_filament: ["#ffd166", "#fff1b6", "#8c6a00"],
+          plasma: ["#00e5ff", "#7b61ff", "#ffffff"],
+        },
+        BACKGROUND_PRESETS: {
+          custom: { mode: "linear" },
+          deep_space: {
+            mode: "linear",
+            linear: { top: "#120a2a", bottom: "#030308", angle: 90 },
+          },
+          purple_haze: {
+            mode: "radial",
+            radial: {
+              inner: "#31134b",
+              outer: "#030308",
+              center_x: 0.48,
+              center_y: 0.56,
+              radius_bias: 1.0,
+            },
+          },
+          ember_fog: {
+            mode: "radial",
+            radial: {
+              inner: "#4b180f",
+              outer: "#040202",
+              center_x: 0.52,
+              center_y: 0.45,
+              radius_bias: 1.15,
+            },
+          },
+          cyan_void: {
+            mode: "linear",
+            linear: { top: "#07111d", bottom: "#020204", angle: 90 },
+          },
+          twilight_mesh: {
+            mode: "mesh",
+            mesh: {
+              tl: "#160a2f",
+              tr: "#09203f",
+              bl: "#030308",
+              br: "#1e0d2b",
+            },
+          },
+          warm_smoke: {
+            mode: "linear",
+            linear: { top: "#2b160f", bottom: "#060303", angle: 90 },
+          },
+          velvet_black: {
+            mode: "radial",
+            radial: {
+              inner: "#171721",
+              outer: "#020202",
+              center_x: 0.5,
+              center_y: 0.5,
+              radius_bias: 0.9,
+            },
+          },
+          aurora_night: {
+            mode: "linear",
+            linear: { top: "#0b1a20", bottom: "#130d29", angle: 90 },
+          },
+        },
+        STYLE_PRESETS: {
+          custom: {},
+          fine_wire: {
+            line_width: 1.0,
+            glow_layers: 4,
+            glow_alpha: 0.025,
+            glow_scale: 1.4,
+            main_alpha: 0.98,
+          },
+          velvet_glow: {
+            line_width: 1.6,
+            glow_layers: 8,
+            glow_alpha: 0.055,
+            glow_scale: 2.0,
+            main_alpha: 0.95,
+          },
+          plasma_bloom: {
+            line_width: 1.2,
+            glow_layers: 12,
+            glow_alpha: 0.075,
+            glow_scale: 2.6,
+            main_alpha: 0.96,
+          },
+          poster_crisp: {
+            line_width: 1.9,
+            glow_layers: 2,
+            glow_alpha: 0.015,
+            glow_scale: 1.15,
+            main_alpha: 1.0,
+          },
+          ghost_trace: {
+            line_width: 0.9,
+            glow_layers: 6,
+            glow_alpha: 0.03,
+            glow_scale: 1.7,
+            main_alpha: 0.85,
+          },
+        },
+        ARTWORK_PRESETS: {
+          custom: {},
+          nebula: {
+            curve: {
+              family: "lissajous",
+              turns: 3.0,
+              asymmetry: 0.1,
+              noise_strength: 0.002,
+              params: { a: 3, b: 2, delta: 1.8 },
+            },
+            style_preset: "velvet_glow",
+            palette_preset: "nebula",
+            background_preset: "purple_haze",
+            color: { mode: "palette", curve_color: "#9ed8ff" },
+            meta_seed: 7,
+          },
+          flower: {
+            curve: {
+              family: "rose",
+              turns: 2.0,
+              asymmetry: 0.05,
+              noise_strength: 0.001,
+              params: { k: 7, radial_wobble: 0.12, wobble_freq: 8 },
+            },
+            style_preset: "velvet_glow",
+            palette_preset: "sunset_bloom",
+            background_preset: "ember_fog",
+            color: { mode: "palette", curve_color: "#ffd7e6" },
+            meta_seed: 12,
+          },
+          electric: {
+            curve: {
+              family: "burst",
+              turns: 3.0,
+              asymmetry: 0.22,
+              noise_strength: 0.004,
+              params: { amp1: 0.45, amp2: 0.25, f1: 9, f2: 17, delta: 0.7 },
+            },
+            style_preset: "plasma_bloom",
+            palette_preset: "plasma",
+            background_preset: "cyan_void",
+            color: { mode: "palette" },
+            meta_seed: 21,
+          },
+          spiro: {
+            curve: {
+              family: "epitrochoid",
+              turns: 6.0,
+              asymmetry: 0.03,
+              noise_strength: 0.0,
+              params: { R: 5, r: 3, d: 5 },
+            },
+            style_preset: "fine_wire",
+            palette_preset: "gold_filament",
+            background_preset: "warm_smoke",
+            color: { mode: "palette", curve_color: "#fff1b6" },
+            meta_seed: 4,
+          },
+          ember_bloom: {
+            curve: {
+              family: "rose",
+              turns: 2.2,
+              asymmetry: 0.08,
+              noise_strength: 0.0015,
+              params: { k: 5, radial_wobble: 0.09, wobble_freq: 6 },
+            },
+            style_preset: "velvet_glow",
+            palette_preset: "ember",
+            background_preset: "ember_fog",
+            color: { mode: "palette" },
+            meta_seed: 17,
+          },
+          aurora_wire: {
+            curve: {
+              family: "lissajous",
+              turns: 2.5,
+              asymmetry: 0.07,
+              noise_strength: 0.001,
+              params: { a: 4, b: 7, delta: 0.9 },
+            },
+            style_preset: "ghost_trace",
+            palette_preset: "aurora",
+            background_preset: "aurora_night",
+            color: { mode: "palette" },
+            meta_seed: 8,
+          },
+          noir_neon: {
+            curve: {
+              family: "epitrochoid",
+              turns: 5.0,
+              asymmetry: 0.02,
+              noise_strength: 0.0,
+              params: { R: 7, r: 4, d: 5 },
+            },
+            style_preset: "poster_crisp",
+            palette_preset: "noir_neon",
+            background_preset: "velvet_black",
+            color: { mode: "palette", curve_color: "#f5f5f5" },
+            meta_seed: 30,
+          },
+          plasma_halo: {
+            curve: {
+              family: "burst",
+              turns: 4.0,
+              asymmetry: 0.2,
+              noise_strength: 0.006,
+              params: { amp1: 0.52, amp2: 0.18, f1: 11, f2: 19, delta: 0.35 },
+            },
+            style_preset: "plasma_bloom",
+            palette_preset: "plasma",
+            background_preset: "deep_space",
+            color: { mode: "palette" },
+            meta_seed: 26,
+          },
+        },
+        FAMILY_PARAM_DEFAULTS: {
+          lissajous: { a: 3.0, b: 2.0, delta: 1.5707963267948966 },
+          rose: { k: 5.0, radial_wobble: 0.12, wobble_freq: 6.0 },
+          epitrochoid: { R: 5.0, r: 3.0, d: 5.0 },
+          burst: { amp1: 0.45, amp2: 0.22, f1: 8.0, f2: 17.0, delta: 0.3 },
+        },
+        PARAM_RANGES: {
+          "curve.turns": [0.5, 12.0],
+          "curve.asymmetry": [0.0, 0.5],
+          "curve.noise_strength": [0.0, 0.05],
+          "curve.zoom": [0.5, 2.0],
+          "style.line_width": [0.3, 5.0],
+          "style.glow_layers": [0, 20],
+          "style.glow_alpha": [0.0, 0.2],
+          "style.glow_scale": [1.0, 6.0],
+          "style.main_alpha": [0.1, 1.0],
+          "background.brightness": [0.5, 1.5],
+          "background.contrast": [0.5, 1.5],
+          "background.texture_strength": [0.0, 0.25],
+          "background.vignette_strength": [0.0, 0.8],
+          "lissajous.a": [1, 12],
+          "lissajous.b": [1, 12],
+          "lissajous.delta": [0, 6.283185307179586],
+          "rose.k": [1, 16],
+          "rose.radial_wobble": [0.0, 0.5],
+          "rose.wobble_freq": [1, 20],
+          "epitrochoid.R": [1, 12],
+          "epitrochoid.r": [1, 12],
+          "epitrochoid.d": [0, 12],
+          "burst.amp1": [0.0, 1.0],
+          "burst.amp2": [0.0, 1.0],
+          "burst.f1": [1, 30],
+          "burst.f2": [1, 30],
+          "burst.delta": [0, 6.283185307179586],
+        },
+        DEFAULT_SETTINGS: {
+          meta: {
+            artwork_preset: "nebula",
+            style_preset: "velvet_glow",
+            palette_preset: "nebula",
+            background_preset: "purple_haze",
+            seed: 7,
+          },
+          curve: {
+            family: "lissajous",
+            turns: 3.0,
+            asymmetry: 0.1,
+            noise_strength: 0.002,
+            zoom: 1.0,
+            params: { a: 3.0, b: 2.0, delta: 1.5707963267948966 },
+          },
+          style: {
+            glow_macro: 0.6,
+            line_width: 1.6,
+            glow_layers: 8,
+            glow_alpha: 0.055,
+            glow_scale: 2.0,
+            main_alpha: 0.95,
+            segment_blending: true,
+          },
+          color: {
+            mode: "palette",
+            curve_color: "#9ed8ff",
+            palette_name: "nebula",
+            palette_colors: ["#8fd3ff", "#bf8fff", "#ffffff"],
+            palette_size: 3,
+            palette_distribution: "even_segments",
+            colormap: "viridis",
+            colormap_span: [0.1, 0.9],
+            num_curve_colors: 3,
+            curve_opacity: 0.95,
+            color_shift: 0.0,
+            manual_palette: false,
+          },
+          background: {
+            mode: "radial",
+            preset: "purple_haze",
+            solid_color: "#05060a",
+            linear: { top: "#120a2a", bottom: "#030308", angle: 90 },
+            radial: {
+              inner: "#31134b",
+              outer: "#030308",
+              center_x: 0.48,
+              center_y: 0.56,
+              radius_bias: 1.0,
+            },
+            mesh: {
+              tl: "#160a2f",
+              tr: "#09203f",
+              bl: "#030308",
+              br: "#1e0d2b",
+            },
+            brightness: 1.0,
+            contrast: 1.0,
+            texture_strength: 0.0,
+            vignette_strength: 0.12,
+          },
+        },
+      };
+
+      const CMAPS = {
+        winter: ["#0000ff", "#00ffff"],
+        spring: ["#ff00ff", "#ffff00"],
+        summer: ["#008066", "#ffff66"],
+        autumn: ["#ff0000", "#ffff00"],
+        viridis: ["#440154", "#3b528b", "#21908d", "#5dc963", "#fde725"],
+        plasma: ["#0d0887", "#7e03a8", "#cc4778", "#f89540", "#f0f921"],
+        cividis: ["#00204c", "#424086", "#7a7c78", "#bcae6c", "#fee838"],
+        cool: ["#00ffff", "#ff00ff"],
+        twilight: ["#e2d9e2", "#7b85d4", "#35204a", "#9177a8", "#e2d9e2"],
+        turbo: [
+          "#30123b",
+          "#4145ab",
+          "#2ab0ff",
+          "#7ded47",
+          "#f9ba38",
+          "#e53935",
+        ],
+        hsv: [
+          "#ff0000",
+          "#ffff00",
+          "#00ff00",
+          "#00ffff",
+          "#0000ff",
+          "#ff00ff",
+          "#ff0000",
+        ],
+        jet: ["#00007f", "#0000ff", "#00ffff", "#ffff00", "#ff0000", "#7f0000"],
+      };
+
+      const NON_COMPOSITION_WIDGET_KEYS = new Set(["seed"]);
+      const CURVE_WIDGET_KEYS = new Set([
+        "family",
+        "turns",
+        "asymmetry",
+        "noise_strength",
+        "zoom",
+        "liss_a",
+        "liss_b",
+        "liss_delta",
+        "rose_k",
+        "rose_radial_wobble",
+        "rose_wobble_freq",
+        "epi_R",
+        "epi_r",
+        "epi_d",
+        "burst_amp1",
+        "burst_amp2",
+        "burst_f1",
+        "burst_f2",
+        "burst_delta",
+      ]);
+      const STYLE_WIDGET_KEYS = new Set([
+        "glow_macro",
+        "line_width",
+        "glow_layers",
+        "glow_alpha",
+        "glow_scale",
+        "main_alpha",
+        "segment_blending",
+      ]);
+      const PALETTE_WIDGET_KEYS = new Set([
+        "color_mode",
+        "palette_name",
+        "palette_manual_enabled",
+        "palette_size",
+        "palette_distribution",
+        "colormap",
+        "colormap_span_lo",
+        "colormap_span_hi",
+        "curve_opacity",
+        "num_curve_colors",
+        "color_shift",
+        "palette_color_1",
+        "palette_color_2",
+        "palette_color_3",
+        "palette_color_4",
+        "palette_color_5",
+        "palette_color_6",
+      ]);
+      const BACKGROUND_WIDGET_KEYS = new Set([
+        "background_mode",
+        "bg_solid_color",
+        "bg_linear_top",
+        "bg_linear_bottom",
+        "bg_linear_angle",
+        "bg_radial_inner",
+        "bg_radial_outer",
+        "bg_radial_center_x",
+        "bg_radial_center_y",
+        "bg_radial_radius_bias",
+        "bg_mesh_tl",
+        "bg_mesh_tr",
+        "bg_mesh_bl",
+        "bg_mesh_br",
+        "bg_brightness",
+        "bg_contrast",
+        "bg_texture_strength",
+        "bg_vignette_strength",
+      ]);
+
+      const previewCanvas = document.getElementById("preview");
+      const statusEl = document.getElementById("status");
+      const previewMeta = document.getElementById("preview_meta");
+      const previewWrap = document.querySelector(".preview-wrap");
+      const themeLinkEl = document.getElementById("theme-link");
+      const THEME_FILES = {
+        default: "./css/theme-default.css",
+        aurora: "./css/theme-aurora.css",
+        ember: "./css/theme-ember.css",
+        noir: "./css/theme-noir.css",
+      };
+
+      let state = validateSettings(deepClone(DATA.DEFAULT_SETTINGS));
+      let isSyncing = false;
+      let renderQueued = false;
+      let bgCache = new Map();
+      let activeToastKind = "";
+
+      function $(id) {
+        return document.getElementById(id);
+      }
+      function deepClone(v) {
+        return JSON.parse(JSON.stringify(v));
+      }
+      function clamp(v, lo, hi) {
+        return Math.max(lo, Math.min(hi, v));
+      }
+      function lerp(a, b, t) {
+        return (1 - t) * a + t * b;
+      }
+      function titleize(s) {
+        return String(s)
+          .replace(/_/g, " ")
+          .replace(/\b\w/g, (m) => m.toUpperCase());
+      }
+      function applyTheme(themeName) {
+        const nextTheme = Object.prototype.hasOwnProperty.call(
+          THEME_FILES,
+          themeName,
+        )
+          ? themeName
+          : "default";
+        themeLinkEl.href = THEME_FILES[nextTheme];
+        document.documentElement.setAttribute("data-theme", nextTheme);
+        $("theme_select").value = nextTheme;
+      }
+      function handleThemeChange() {
+        applyTheme($("theme_select").value);
+      }
+      function nowTimestampStr() {
+        const d = new Date();
+        const pad = (n) => String(n).padStart(2, "0");
+        return `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+      }
+      function rgbaString(rgb, alpha = 1) {
+        return `rgba(${Math.round(rgb[0] * 255)}, ${Math.round(rgb[1] * 255)}, ${Math.round(rgb[2] * 255)}, ${alpha})`;
+      }
+      function hexToRgb01(hex) {
+        const clean = hex.replace("#", "");
+        const n = parseInt(
+          clean.length === 3
+            ? clean
+                .split("")
+                .map((ch) => ch + ch)
+                .join("")
+            : clean,
+          16,
+        );
+        return [
+          ((n >> 16) & 255) / 255,
+          ((n >> 8) & 255) / 255,
+          (n & 255) / 255,
+        ];
+      }
+      function rgb01ToHex(rgb) {
+        const vals = rgb.map((v) => clamp(v, 0, 1));
+        return (
+          "#" +
+          vals
+            .map((v) =>
+              Math.round(v * 255)
+                .toString(16)
+                .padStart(2, "0"),
+            )
+            .join("")
+        );
+      }
+      function blendRgb(c1, c2, t) {
+        return [
+          lerp(c1[0], c2[0], t),
+          lerp(c1[1], c2[1], t),
+          lerp(c1[2], c2[2], t),
+        ];
+      }
+      function rgbToHsv(r, g, b) {
+        const max = Math.max(r, g, b),
+          min = Math.min(r, g, b);
+        const d = max - min;
+        let h = 0;
+        const s = max === 0 ? 0 : d / max;
+        const v = max;
+        if (d !== 0) {
+          switch (max) {
+            case r:
+              h = (g - b) / d + (g < b ? 6 : 0);
+              break;
+            case g:
+              h = (b - r) / d + 2;
+              break;
+            case b:
+              h = (r - g) / d + 4;
+              break;
+          }
+          h /= 6;
+        }
+        return [h, s, v];
+      }
+      function hsvToRgb(h, s, v) {
+        let r, g, b;
+        const i = Math.floor(h * 6);
+        const f = h * 6 - i;
+        const p = v * (1 - s);
+        const q = v * (1 - f * s);
+        const t = v * (1 - (1 - f) * s);
+        switch (i % 6) {
+          case 0:
+            r = v;
+            g = t;
+            b = p;
+            break;
+          case 1:
+            r = q;
+            g = v;
+            b = p;
+            break;
+          case 2:
+            r = p;
+            g = v;
+            b = t;
+            break;
+          case 3:
+            r = p;
+            g = q;
+            b = v;
+            break;
+          case 4:
+            r = t;
+            g = p;
+            b = v;
+            break;
+          case 5:
+            r = v;
+            g = p;
+            b = q;
+            break;
+        }
+        return [r, g, b];
+      }
+      function shiftColorHue(hexColor, shift) {
+        const rgb = hexToRgb01(hexColor);
+        const [h, s, v] = rgbToHsv(rgb[0], rgb[1], rgb[2]);
+        return rgb01ToHex(hsvToRgb((h + shift + 1) % 1, s, v));
+      }
+      function downloadBlob(filename, blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          URL.revokeObjectURL(url);
+          a.remove();
+        }, 0);
+      }
+      class RNG {
+        constructor(seed) {
+          this.seed = Number(seed) >>> 0 || 1;
+          this._spare = null;
+        }
+        random() {
+          let t = (this.seed += 0x6d2b79f5);
+          t = Math.imul(t ^ (t >>> 15), t | 1);
+          t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        }
+        uniform(lo, hi) {
+          return lo + (hi - lo) * this.random();
+        }
+        integers(lo, hi) {
+          return Math.floor(this.uniform(lo, hi));
+        }
+        normal() {
+          if (this._spare !== null) {
+            const v = this._spare;
+            this._spare = null;
+            return v;
+          }
+          let u = 0,
+            v = 0;
+          while (u === 0) u = this.random();
+          while (v === 0) v = this.random();
+          const mag = Math.sqrt(-2 * Math.log(u));
+          const z0 = mag * Math.cos(2 * Math.PI * v);
+          const z1 = mag * Math.sin(2 * Math.PI * v);
+          this._spare = z1;
+          return z0;
+        }
+      }
+
+      function makeDefaultCurveParams(family) {
+        return deepClone(DATA.FAMILY_PARAM_DEFAULTS[family]);
+      }
+      function makeDefaultSettings() {
+        return deepClone(DATA.DEFAULT_SETTINGS);
+      }
+      function inferGlowMacro(settings) {
+        const s = settings.style;
+        const components = [
+          clamp(s.glow_layers / 14.0, 0, 1),
+          clamp(s.glow_alpha / 0.085, 0, 1),
+          clamp((s.glow_scale - 1.0) / 2.0, 0, 1),
+        ];
+        return clamp((components[0] + components[1] + components[2]) / 3, 0, 1);
+      }
+      function syncMacroControls(settings) {
+        settings.style.glow_macro = inferGlowMacro(settings);
+        return settings;
+      }
+      function applyGlowMacro(settings) {
+        const g = clamp(Number(settings.style.glow_macro ?? 0.6), 0, 1);
+        settings.style.glow_layers = Math.round(lerp(0, 14, g));
+        settings.style.glow_alpha = lerp(0.0, 0.085, g);
+        settings.style.glow_scale = lerp(1.0, 3.0, g);
+        return settings;
+      }
+      function validateCurveSettings(settings) {
+        const curve = settings.curve;
+        const fams = new Set(DATA.FAMILY_OPTIONS.map((v) => v[1]));
+        if (!fams.has(curve.family)) curve.family = "lissajous";
+        curve.turns = clamp(
+          Number(curve.turns),
+          ...DATA.PARAM_RANGES["curve.turns"],
+        );
+        curve.asymmetry = clamp(
+          Number(curve.asymmetry),
+          ...DATA.PARAM_RANGES["curve.asymmetry"],
+        );
+        curve.noise_strength = clamp(
+          Number(curve.noise_strength),
+          ...DATA.PARAM_RANGES["curve.noise_strength"],
+        );
+        curve.zoom = clamp(
+          Number(curve.zoom),
+          ...DATA.PARAM_RANGES["curve.zoom"],
+        );
+        const base = makeDefaultCurveParams(curve.family);
+        Object.assign(base, curve.params || {});
+        if (curve.family === "lissajous") {
+          base.a = clamp(Number(base.a), ...DATA.PARAM_RANGES["lissajous.a"]);
+          base.b = clamp(Number(base.b), ...DATA.PARAM_RANGES["lissajous.b"]);
+          base.delta = clamp(
+            Number(base.delta),
+            ...DATA.PARAM_RANGES["lissajous.delta"],
+          );
+        } else if (curve.family === "rose") {
+          base.k = clamp(Number(base.k), ...DATA.PARAM_RANGES["rose.k"]);
+          base.radial_wobble = clamp(
+            Number(base.radial_wobble),
+            ...DATA.PARAM_RANGES["rose.radial_wobble"],
+          );
+          base.wobble_freq = clamp(
+            Number(base.wobble_freq),
+            ...DATA.PARAM_RANGES["rose.wobble_freq"],
+          );
+        } else if (curve.family === "epitrochoid") {
+          base.R = clamp(Number(base.R), ...DATA.PARAM_RANGES["epitrochoid.R"]);
+          base.r = clamp(Number(base.r), ...DATA.PARAM_RANGES["epitrochoid.r"]);
+          if (Math.abs(base.r) < 1e-6) base.r = 1;
+          base.d = clamp(Number(base.d), ...DATA.PARAM_RANGES["epitrochoid.d"]);
+        } else if (curve.family === "burst") {
+          base.amp1 = clamp(
+            Number(base.amp1),
+            ...DATA.PARAM_RANGES["burst.amp1"],
+          );
+          base.amp2 = clamp(
+            Number(base.amp2),
+            ...DATA.PARAM_RANGES["burst.amp2"],
+          );
+          base.f1 = clamp(Number(base.f1), ...DATA.PARAM_RANGES["burst.f1"]);
+          base.f2 = clamp(Number(base.f2), ...DATA.PARAM_RANGES["burst.f2"]);
+          base.delta = clamp(
+            Number(base.delta),
+            ...DATA.PARAM_RANGES["burst.delta"],
+          );
+        }
+        curve.params = base;
+        return settings;
+      }
+      function validateColorSettings(settings) {
+        const color = settings.color;
+        const modes = new Set(DATA.COLOR_MODE_OPTIONS.map((v) => v[1]));
+        if (!modes.has(color.mode)) color.mode = "palette";
+        color.curve_color = color.curve_color || "#ffffff";
+        color.curve_opacity = clamp(Number(color.curve_opacity), 0.1, 1);
+        color.palette_size = Math.round(
+          clamp(Number(color.palette_size), 2, 6),
+        );
+        color.num_curve_colors = Math.round(
+          clamp(Number(color.num_curve_colors), 1, 12),
+        );
+        color.color_shift = clamp(Number(color.color_shift ?? 0), -0.5, 0.5);
+        color.manual_palette = !!color.manual_palette;
+        const distributions = new Set(
+          DATA.PALETTE_DISTRIBUTION_OPTIONS.map((v) => v[1]),
+        );
+        if (!distributions.has(color.palette_distribution))
+          color.palette_distribution = "even_segments";
+        if (!(color.palette_name in DATA.PALETTE_PRESETS))
+          color.palette_name = "nebula";
+        if (!color.manual_palette) {
+          const preset = DATA.PALETTE_PRESETS[color.palette_name] || [];
+          if (preset.length) {
+            color.palette_colors = deepClone(preset);
+            color.palette_size = Math.round(
+              clamp(color.palette_colors.length, 2, 6),
+            );
+          }
+        }
+        color.palette_colors = Array.isArray(color.palette_colors)
+          ? [...color.palette_colors]
+          : [];
+        while (color.palette_colors.length < color.palette_size)
+          color.palette_colors.push("#ffffff");
+        color.palette_colors = color.palette_colors.slice(
+          0,
+          Math.max(6, color.palette_size),
+        );
+        let span = Array.isArray(color.colormap_span)
+          ? [...color.colormap_span]
+          : [0.1, 0.9];
+        if (span.length !== 2) span = [0.1, 0.9];
+        span = [
+          clamp(Number(span[0]), 0, 1),
+          clamp(Number(span[1]), 0, 1),
+        ].sort((a, b) => a - b);
+        if (span[1] - span[0] < 0.05) span[1] = Math.min(1, span[0] + 0.05);
+        color.colormap_span = span;
+        if (!DATA.CURATED_COLORMAPS.includes(color.colormap))
+          color.colormap = DATA.CURATED_COLORMAPS[0];
+        return settings;
+      }
+      function validateStyleSettings(settings) {
+        const s = settings.style;
+        s.glow_macro = clamp(Number(s.glow_macro ?? 0.6), 0, 1);
+        s.line_width = clamp(
+          Number(s.line_width),
+          ...DATA.PARAM_RANGES["style.line_width"],
+        );
+        s.glow_layers = Math.round(
+          clamp(
+            Number(s.glow_layers),
+            ...DATA.PARAM_RANGES["style.glow_layers"],
+          ),
+        );
+        s.glow_alpha = clamp(
+          Number(s.glow_alpha),
+          ...DATA.PARAM_RANGES["style.glow_alpha"],
+        );
+        s.glow_scale = clamp(
+          Number(s.glow_scale),
+          ...DATA.PARAM_RANGES["style.glow_scale"],
+        );
+        s.main_alpha = clamp(
+          Number(s.main_alpha),
+          ...DATA.PARAM_RANGES["style.main_alpha"],
+        );
+        s.segment_blending = !!s.segment_blending;
+        return settings;
+      }
+      function validateBackgroundSettings(settings) {
+        const bg = settings.background;
+        const modes = new Set(DATA.BACKGROUND_MODE_OPTIONS.map((v) => v[1]));
+        if (!modes.has(bg.mode)) bg.mode = "linear";
+        bg.brightness = clamp(
+          Number(bg.brightness),
+          ...DATA.PARAM_RANGES["background.brightness"],
+        );
+        bg.contrast = clamp(
+          Number(bg.contrast),
+          ...DATA.PARAM_RANGES["background.contrast"],
+        );
+        bg.texture_strength = clamp(
+          Number(bg.texture_strength),
+          ...DATA.PARAM_RANGES["background.texture_strength"],
+        );
+        bg.vignette_strength = clamp(
+          Number(bg.vignette_strength),
+          ...DATA.PARAM_RANGES["background.vignette_strength"],
+        );
+        bg.linear = Object.assign(
+          { top: "#120a2a", bottom: "#030308", angle: 90 },
+          bg.linear || {},
+        );
+        bg.radial = Object.assign(
+          {
+            inner: "#31134b",
+            outer: "#030308",
+            center_x: 0.5,
+            center_y: 0.5,
+            radius_bias: 1,
+          },
+          bg.radial || {},
+        );
+        bg.mesh = Object.assign(
+          { tl: "#160a2f", tr: "#09203f", bl: "#030308", br: "#1e0d2b" },
+          bg.mesh || {},
+        );
+        bg.radial.center_x = clamp(Number(bg.radial.center_x), 0, 1);
+        bg.radial.center_y = clamp(Number(bg.radial.center_y), 0, 1);
+        bg.radial.radius_bias = clamp(Number(bg.radial.radius_bias), 0.25, 2);
+        bg.linear.angle = clamp(Number(bg.linear.angle), 0, 180);
+        return settings;
+      }
+      function validateSettings(input) {
+        const settings = deepClone(input);
+        validateCurveSettings(settings);
+        validateColorSettings(settings);
+        validateBackgroundSettings(settings);
+        validateStyleSettings(settings);
+        syncMacroControls(settings);
+        return settings;
+      }
+      function applyStylePreset(settings, presetName) {
+        settings = deepClone(settings);
+        if (!(presetName in DATA.STYLE_PRESETS))
+          return validateSettings(settings);
+        settings.meta.artwork_preset = "custom";
+        settings.meta.style_preset = presetName;
+        Object.assign(
+          settings.style,
+          deepClone(DATA.STYLE_PRESETS[presetName]),
+        );
+        return validateSettings(settings);
+      }
+      function applyPalettePreset(settings, presetName) {
+        settings = deepClone(settings);
+        settings.meta.artwork_preset = "custom";
+        if (!(presetName in DATA.PALETTE_PRESETS) || presetName === "custom") {
+          settings.meta.palette_preset = "custom";
+          return validateSettings(settings);
+        }
+        settings.meta.palette_preset = presetName;
+        settings.color.mode = "palette";
+        settings.color.palette_name = presetName;
+        settings.color.palette_colors = deepClone(
+          DATA.PALETTE_PRESETS[presetName],
+        );
+        settings.color.palette_size = Math.min(
+          6,
+          settings.color.palette_colors.length,
+        );
+        settings.color.manual_palette = false;
+        return validateSettings(settings);
+      }
+      function applyBackgroundPreset(settings, presetName) {
+        settings = deepClone(settings);
+        settings.meta.artwork_preset = "custom";
+        if (
+          !(presetName in DATA.BACKGROUND_PRESETS) ||
+          presetName === "custom"
+        ) {
+          settings.meta.background_preset = "custom";
+          settings.background.preset = "custom";
+          return validateSettings(settings);
+        }
+        settings.meta.background_preset = presetName;
+        const preset = DATA.BACKGROUND_PRESETS[presetName];
+        settings.background.preset = presetName;
+        settings.background.mode = preset.mode;
+        if (preset.linear)
+          Object.assign(settings.background.linear, deepClone(preset.linear));
+        if (preset.radial)
+          Object.assign(settings.background.radial, deepClone(preset.radial));
+        if (preset.mesh)
+          Object.assign(settings.background.mesh, deepClone(preset.mesh));
+        return validateSettings(settings);
+      }
+      function applyArtworkPreset(settings, presetName) {
+        settings = deepClone(settings);
+        if (!(presetName in DATA.ARTWORK_PRESETS) || presetName === "custom") {
+          settings.meta.artwork_preset = "custom";
+          return validateSettings(settings);
+        }
+        const preset = DATA.ARTWORK_PRESETS[presetName];
+        settings.meta.artwork_preset = presetName;
+        settings.curve.family = preset.curve.family;
+        settings.curve.params = makeDefaultCurveParams(settings.curve.family);
+        Object.assign(settings.curve.params, deepClone(preset.curve.params));
+        settings.curve.turns = preset.curve.turns;
+        settings.curve.asymmetry = preset.curve.asymmetry;
+        settings.curve.noise_strength = preset.curve.noise_strength;
+        settings.meta.seed = preset.meta_seed ?? settings.meta.seed;
+        settings = applyStylePreset(settings, preset.style_preset);
+        settings = applyPalettePreset(settings, preset.palette_preset);
+        settings = applyBackgroundPreset(settings, preset.background_preset);
+        settings.meta.artwork_preset = presetName;
+        Object.assign(settings.color, deepClone(preset.color || {}));
+        return validateSettings(settings);
+      }
+      function markPresetsCustomIfNeeded(settings, changedKeys) {
+        settings = deepClone(settings);
+        if (!changedKeys) {
+          settings.meta.artwork_preset = "custom";
+          settings.meta.style_preset = "custom";
+          settings.meta.palette_preset = "custom";
+          settings.meta.background_preset = "custom";
+          settings.background.preset = "custom";
+          return settings;
+        }
+        const affected = new Set();
+        for (const key of changedKeys) {
+          if (!key || NON_COMPOSITION_WIDGET_KEYS.has(key)) continue;
+          if (
+            CURVE_WIDGET_KEYS.has(key) ||
+            STYLE_WIDGET_KEYS.has(key) ||
+            PALETTE_WIDGET_KEYS.has(key) ||
+            BACKGROUND_WIDGET_KEYS.has(key)
+          )
+            affected.add("artwork");
+          if (STYLE_WIDGET_KEYS.has(key)) affected.add("style");
+          if (PALETTE_WIDGET_KEYS.has(key)) affected.add("palette");
+          if (BACKGROUND_WIDGET_KEYS.has(key)) affected.add("background");
+        }
+        if (affected.has("artwork")) settings.meta.artwork_preset = "custom";
+        if (affected.has("style")) settings.meta.style_preset = "custom";
+        if (affected.has("palette")) settings.meta.palette_preset = "custom";
+        if (affected.has("background")) {
+          settings.meta.background_preset = "custom";
+          settings.background.preset = "custom";
+        }
+        return settings;
+      }
+      function perturbValue(rng, value, lo, hi, intensity, integer = false) {
+        const pct = { subtle: 0.1, moderate: 0.28, wild: 0.65 }[intensity];
+        const span = hi - lo;
+        let out =
+          intensity === "wild"
+            ? rng.uniform(lo, hi)
+            : value + rng.normal() * pct * span;
+        out = clamp(out, lo, hi);
+        return integer ? Math.round(out) : out;
+      }
+      function chooseRelatedPalette(currentPaletteName, intensity, rng) {
+        const names = Object.keys(DATA.PALETTE_PRESETS).filter(
+          (k) => k !== "custom",
+        );
+        if (names.includes(currentPaletteName) && intensity === "subtle")
+          return currentPaletteName;
+        return names[rng.integers(0, names.length)];
+      }
+      function chooseRelatedBackground(currentBgName, intensity, rng) {
+        const names = Object.keys(DATA.BACKGROUND_PRESETS).filter(
+          (k) => k !== "custom",
+        );
+        if (names.includes(currentBgName) && intensity === "subtle")
+          return currentBgName;
+        return names[rng.integers(0, names.length)];
+      }
+      function randomizeLissajousParams(params, intensity, rng) {
+        const curated = [
+          [2, 3],
+          [3, 4],
+          [3, 5],
+          [4, 7],
+          [5, 8],
+          [7, 5],
+          [8, 3],
+        ];
+        let [a, b] =
+          intensity === "subtle"
+            ? [params.a, params.b]
+            : curated[rng.integers(0, curated.length)];
+        return {
+          a: perturbValue(
+            rng,
+            a,
+            ...DATA.PARAM_RANGES["lissajous.a"],
+            intensity,
+            true,
+          ),
+          b: perturbValue(
+            rng,
+            b,
+            ...DATA.PARAM_RANGES["lissajous.b"],
+            intensity,
+            true,
+          ),
+          delta: perturbValue(
+            rng,
+            params.delta,
+            ...DATA.PARAM_RANGES["lissajous.delta"],
+            intensity,
+            false,
+          ),
+        };
+      }
+      function randomizeRoseParams(params, intensity, rng) {
+        return {
+          k: perturbValue(
+            rng,
+            params.k,
+            ...DATA.PARAM_RANGES["rose.k"],
+            intensity,
+            true,
+          ),
+          radial_wobble: perturbValue(
+            rng,
+            Math.min(params.radial_wobble, 0.25),
+            ...DATA.PARAM_RANGES["rose.radial_wobble"],
+            intensity,
+            false,
+          ),
+          wobble_freq: perturbValue(
+            rng,
+            params.wobble_freq,
+            ...DATA.PARAM_RANGES["rose.wobble_freq"],
+            intensity,
+            true,
+          ),
+        };
+      }
+      function randomizeEpitrochoidParams(params, intensity, rng) {
+        const ratios = [
+          [5, 3],
+          [7, 4],
+          [8, 3],
+          [9, 5],
+          [6, 2],
+        ];
+        let R, r;
+        if (intensity === "wild") {
+          R = rng.integers(3, 12);
+          r = rng.integers(1, Math.max(2, R));
+        } else {
+          [R, r] = ratios[rng.integers(0, ratios.length)];
+        }
+        return {
+          R: Number(R),
+          r: Number(r),
+          d: perturbValue(
+            rng,
+            params.d,
+            ...DATA.PARAM_RANGES["epitrochoid.d"],
+            intensity,
+            false,
+          ),
+        };
+      }
+      function randomizeBurstParams(params, intensity, rng) {
+        let f1 = perturbValue(
+          rng,
+          params.f1,
+          ...DATA.PARAM_RANGES["burst.f1"],
+          intensity,
+          true,
+        );
+        let f2 = perturbValue(
+          rng,
+          params.f2,
+          ...DATA.PARAM_RANGES["burst.f2"],
+          intensity,
+          true,
+        );
+        if (f1 === f2) f2 = clamp(f2 + 2, ...DATA.PARAM_RANGES["burst.f2"]);
+        return {
+          amp1: perturbValue(
+            rng,
+            Math.max(params.amp1, params.amp2),
+            ...DATA.PARAM_RANGES["burst.amp1"],
+            intensity,
+            false,
+          ),
+          amp2: perturbValue(
+            rng,
+            Math.min(params.amp2, params.amp1),
+            ...DATA.PARAM_RANGES["burst.amp2"],
+            intensity,
+            false,
+          ),
+          f1: Number(f1),
+          f2: Number(f2),
+          delta: perturbValue(
+            rng,
+            params.delta,
+            ...DATA.PARAM_RANGES["burst.delta"],
+            intensity,
+            false,
+          ),
+        };
+      }
+      function resolveRandomizationIntensity(settings, intensity = null) {
+        if (["subtle", "moderate", "wild"].includes(intensity))
+          return intensity;
+        return DATA.DEFAULT_RANDOMIZATION_INTENSITY;
+      }
+      function randomizeStyle(
+        settings,
+        intensity = null,
+        rng = null,
+        glowOnly = false,
+      ) {
+        settings = deepClone(settings);
+        rng = rng || new RNG(settings.meta.seed + 222);
+        intensity = resolveRandomizationIntensity(settings, intensity);
+        settings.meta.artwork_preset = "custom";
+        settings.meta.style_preset = "custom";
+        if (!glowOnly) {
+          settings.style.line_width = perturbValue(
+            rng,
+            settings.style.line_width,
+            ...DATA.PARAM_RANGES["style.line_width"],
+            intensity,
+          );
+          settings.style.main_alpha = perturbValue(
+            rng,
+            settings.style.main_alpha,
+            ...DATA.PARAM_RANGES["style.main_alpha"],
+            intensity,
+          );
+        }
+        settings.style.glow_layers = perturbValue(
+          rng,
+          settings.style.glow_layers,
+          ...DATA.PARAM_RANGES["style.glow_layers"],
+          intensity,
+          true,
+        );
+        settings.style.glow_alpha = perturbValue(
+          rng,
+          settings.style.glow_alpha,
+          ...DATA.PARAM_RANGES["style.glow_alpha"],
+          intensity,
+        );
+        settings.style.glow_scale = perturbValue(
+          rng,
+          settings.style.glow_scale,
+          ...DATA.PARAM_RANGES["style.glow_scale"],
+          intensity,
+        );
+        return validateSettings(settings);
+      }
+      function randomizePalette(settings, intensity = null, rng = null) {
+        settings = deepClone(settings);
+        rng = rng || new RNG(settings.meta.seed + 333);
+        intensity = resolveRandomizationIntensity(settings, intensity);
+        settings.meta.artwork_preset = "custom";
+        settings.meta.palette_preset = "custom";
+        const paletteName = chooseRelatedPalette(
+          settings.color.palette_name,
+          intensity,
+          rng,
+        );
+        if (intensity === "wild" && rng.random() < 0.25) {
+          settings.color.mode = "colormap";
+          settings.color.colormap =
+            DATA.CURATED_COLORMAPS[
+              rng.integers(0, DATA.CURATED_COLORMAPS.length)
+            ];
+        } else {
+          if (
+            !DATA.COLOR_MODE_OPTIONS.map((v) => v[1]).includes(
+              settings.color.mode,
+            )
+          )
+            settings.color.mode = "palette";
+          settings.color.palette_name = paletteName;
+          settings.color.palette_colors = deepClone(
+            DATA.PALETTE_PRESETS[paletteName],
+          );
+          settings.color.palette_size = Math.round(
+            clamp(
+              settings.color.palette_colors.length + rng.integers(-1, 2),
+              2,
+              6,
+            ),
+          );
+          settings.color.num_curve_colors = Math.round(
+            clamp(settings.color.num_curve_colors + rng.integers(-1, 3), 1, 12),
+          );
+          const distributionChoices = DATA.PALETTE_DISTRIBUTION_OPTIONS.map(
+            (v) => v[1],
+          );
+          const changeDistribution = { subtle: 0.2, moderate: 0.45, wild: 0.7 }[
+            intensity
+          ];
+          if (rng.random() < changeDistribution)
+            settings.color.palette_distribution =
+              distributionChoices[rng.integers(0, distributionChoices.length)];
+        }
+        const shiftDelta = { subtle: 0.04, moderate: 0.1, wild: 0.22 }[
+          intensity
+        ];
+        settings.color.color_shift = clamp(
+          (settings.color.color_shift ?? 0) +
+            rng.uniform(-shiftDelta, shiftDelta),
+          -0.5,
+          0.5,
+        );
+        return validateSettings(settings);
+      }
+      function randomizeBackground(settings, intensity = null, rng = null) {
+        settings = deepClone(settings);
+        rng = rng || new RNG(settings.meta.seed + 444);
+        intensity = resolveRandomizationIntensity(settings, intensity);
+        const presetName = chooseRelatedBackground(
+          settings.background.preset,
+          intensity,
+          rng,
+        );
+        settings = applyBackgroundPreset(settings, presetName);
+        if (intensity !== "subtle" && rng.random() < 0.25) {
+          const modes = ["solid", "linear", "radial", "mesh"];
+          settings.background.mode = modes[rng.integers(0, modes.length)];
+        }
+        settings.background.brightness = perturbValue(
+          rng,
+          settings.background.brightness,
+          ...DATA.PARAM_RANGES["background.brightness"],
+          intensity,
+        );
+        settings.background.contrast = perturbValue(
+          rng,
+          settings.background.contrast,
+          ...DATA.PARAM_RANGES["background.contrast"],
+          intensity,
+        );
+        settings.background.texture_strength = perturbValue(
+          rng,
+          settings.background.texture_strength,
+          ...DATA.PARAM_RANGES["background.texture_strength"],
+          intensity,
+        );
+        settings.background.vignette_strength = perturbValue(
+          rng,
+          settings.background.vignette_strength,
+          ...DATA.PARAM_RANGES["background.vignette_strength"],
+          intensity,
+        );
+        settings.meta.artwork_preset = "custom";
+        settings.meta.background_preset = "custom";
+        settings.background.preset = "custom";
+        return validateSettings(settings);
+      }
+      function randomizeCurve(
+        settings,
+        intensity = null,
+        keepFamily = false,
+        rng = null,
+        includeSharedCurveControls = true,
+      ) {
+        settings = deepClone(settings);
+        rng = rng || new RNG(settings.meta.seed + 555);
+        intensity = resolveRandomizationIntensity(settings, intensity);
+        if (!keepFamily) {
+          const familyChangeProbability =
+            { subtle: 0.2, moderate: 0.5, wild: 1 }[intensity] ?? 0.5;
+          if (rng.random() < familyChangeProbability) {
+            const choices = DATA.FAMILY_OPTIONS.map((v) => v[1]).filter(
+              (v) => v !== settings.curve.family,
+            );
+            if (choices.length) {
+              settings.curve.family = choices[rng.integers(0, choices.length)];
+              settings.curve.params = makeDefaultCurveParams(
+                settings.curve.family,
+              );
+            }
+          }
+        }
+        const fam = settings.curve.family;
+        if (fam === "lissajous")
+          settings.curve.params = randomizeLissajousParams(
+            settings.curve.params,
+            intensity,
+            rng,
+          );
+        if (fam === "rose")
+          settings.curve.params = randomizeRoseParams(
+            settings.curve.params,
+            intensity,
+            rng,
+          );
+        if (fam === "epitrochoid")
+          settings.curve.params = randomizeEpitrochoidParams(
+            settings.curve.params,
+            intensity,
+            rng,
+          );
+        if (fam === "burst")
+          settings.curve.params = randomizeBurstParams(
+            settings.curve.params,
+            intensity,
+            rng,
+          );
+        if (includeSharedCurveControls) {
+          settings.curve.turns = perturbValue(
+            rng,
+            settings.curve.turns,
+            ...DATA.PARAM_RANGES["curve.turns"],
+            intensity,
+          );
+          settings.curve.asymmetry = perturbValue(
+            rng,
+            settings.curve.asymmetry,
+            ...DATA.PARAM_RANGES["curve.asymmetry"],
+            intensity,
+          );
+          settings.curve.noise_strength = perturbValue(
+            rng,
+            settings.curve.noise_strength,
+            ...DATA.PARAM_RANGES["curve.noise_strength"],
+            intensity,
+          );
+          settings.curve.zoom = perturbValue(
+            rng,
+            settings.curve.zoom,
+            ...DATA.PARAM_RANGES["curve.zoom"],
+            intensity,
+          );
+        }
+        settings.meta.artwork_preset = "custom";
+        return validateSettings(settings);
+      }
+      function shuffleSeed(settings, rng = null) {
+        settings = deepClone(settings);
+        rng = rng || new RNG(settings.meta.seed + 666);
+        settings.meta.seed = rng.integers(0, 10000);
+        return settings;
+      }
+      function randomizeSettings(settings, scope = "all", intensity = null) {
+        settings = deepClone(settings);
+        intensity = resolveRandomizationIntensity(settings, intensity);
+        const rng = new RNG((settings.meta.seed + 777) >>> 0);
+        if (scope === "seed_only")
+          return validateSettings(shuffleSeed(settings, rng));
+        if (scope === "all") {
+          settings = shuffleSeed(settings, rng);
+          settings = randomizeCurve(settings, intensity, false, rng);
+          settings = randomizeStyle(settings, intensity, rng);
+          settings = randomizePalette(settings, intensity, rng);
+          settings = randomizeBackground(settings, intensity, rng);
+        } else if (scope === "curve") {
+          settings = randomizeCurve(settings, intensity, false, rng);
+        } else if (scope === "current_family") {
+          settings = randomizeCurve(settings, intensity, true, rng);
+        } else if (scope === "curve_params") {
+          settings = randomizeCurve(settings, intensity, true, rng, false);
+        } else if (scope === "style") {
+          settings = randomizeStyle(settings, intensity, rng);
+        } else if (scope === "palette") {
+          settings = randomizePalette(settings, intensity, rng);
+        } else if (scope === "background") {
+          settings = randomizeBackground(settings, intensity, rng);
+        } else if (scope === "glow_only") {
+          settings = randomizeStyle(settings, intensity, rng, true);
+        }
+        return validateSettings(settings);
+      }
+
+      function updateReadouts() {
+        document.querySelectorAll("[data-output-for]").forEach((el) => {
+          const target = $(el.dataset.outputFor);
+          if (!target) return;
+          const decimals = Number(el.dataset.decimals ?? 2);
+          const raw =
+            target.type === "checkbox"
+              ? target.checked
+                ? 1
+                : 0
+              : Number(target.value);
+          el.textContent = Number.isFinite(raw)
+            ? raw.toFixed(decimals)
+            : target.value;
+        });
+      }
+      function buildSelect(selectId, options, includeCustom = true) {
+        const select = $(selectId);
+        select.innerHTML = "";
+        options.forEach(([label, value]) => {
+          const opt = document.createElement("option");
+          opt.value = value;
+          opt.textContent = label;
+          select.appendChild(opt);
+        });
+      }
+      function populateSelects() {
+        buildSelect("family", DATA.FAMILY_OPTIONS);
+        buildSelect("color_mode", DATA.COLOR_MODE_OPTIONS);
+        buildSelect("background_mode", DATA.BACKGROUND_MODE_OPTIONS);
+        buildSelect("palette_distribution", DATA.PALETTE_DISTRIBUTION_OPTIONS);
+        buildSelect(
+          "artwork_preset",
+          Object.keys(DATA.ARTWORK_PRESETS).map((k) => [titleize(k), k]),
+        );
+        buildSelect(
+          "style_preset",
+          Object.keys(DATA.STYLE_PRESETS).map((k) => [titleize(k), k]),
+        );
+        buildSelect(
+          "palette_preset",
+          Object.keys(DATA.PALETTE_PRESETS).map((k) => [titleize(k), k]),
+        );
+        buildSelect(
+          "background_preset",
+          Object.keys(DATA.BACKGROUND_PRESETS).map((k) => [titleize(k), k]),
+        );
+        buildSelect(
+          "palette_name",
+          Object.keys(DATA.PALETTE_PRESETS)
+            .filter((k) => k !== "custom")
+            .map((k) => [titleize(k), k]),
+        );
+        buildSelect(
+          "colormap",
+          DATA.CURATED_COLORMAPS.map((k) => [k, k]),
+        );
+      }
+      function writeStateToUI() {
+        isSyncing = true;
+        try {
+          $("family").value = state.curve.family;
+          $("artwork_preset").value = state.meta.artwork_preset;
+          $("style_preset").value = state.meta.style_preset;
+          $("palette_preset").value = state.meta.palette_preset;
+          $("background_preset").value = state.meta.background_preset;
+          $("seed").value = Math.round(state.meta.seed);
+          $("glow_macro").value = state.style.glow_macro;
+          $("turns").value = state.curve.turns;
+          $("asymmetry").value = state.curve.asymmetry;
+          $("noise_strength").value = state.curve.noise_strength;
+          $("zoom").value = state.curve.zoom;
+
+          $("liss_a").value =
+            state.curve.params.a ?? DATA.FAMILY_PARAM_DEFAULTS.lissajous.a;
+          $("liss_b").value =
+            state.curve.params.b ?? DATA.FAMILY_PARAM_DEFAULTS.lissajous.b;
+          $("liss_delta").value =
+            state.curve.params.delta ??
+            DATA.FAMILY_PARAM_DEFAULTS.lissajous.delta;
+          $("rose_k").value =
+            state.curve.params.k ?? DATA.FAMILY_PARAM_DEFAULTS.rose.k;
+          $("rose_radial_wobble").value =
+            state.curve.params.radial_wobble ??
+            DATA.FAMILY_PARAM_DEFAULTS.rose.radial_wobble;
+          $("rose_wobble_freq").value =
+            state.curve.params.wobble_freq ??
+            DATA.FAMILY_PARAM_DEFAULTS.rose.wobble_freq;
+          $("epi_R").value =
+            state.curve.params.R ?? DATA.FAMILY_PARAM_DEFAULTS.epitrochoid.R;
+          $("epi_r").value =
+            state.curve.params.r ?? DATA.FAMILY_PARAM_DEFAULTS.epitrochoid.r;
+          $("epi_d").value =
+            state.curve.params.d ?? DATA.FAMILY_PARAM_DEFAULTS.epitrochoid.d;
+          $("burst_amp1").value =
+            state.curve.params.amp1 ?? DATA.FAMILY_PARAM_DEFAULTS.burst.amp1;
+          $("burst_amp2").value =
+            state.curve.params.amp2 ?? DATA.FAMILY_PARAM_DEFAULTS.burst.amp2;
+          $("burst_f1").value =
+            state.curve.params.f1 ?? DATA.FAMILY_PARAM_DEFAULTS.burst.f1;
+          $("burst_f2").value =
+            state.curve.params.f2 ?? DATA.FAMILY_PARAM_DEFAULTS.burst.f2;
+          $("burst_delta").value =
+            state.curve.params.delta ?? DATA.FAMILY_PARAM_DEFAULTS.burst.delta;
+
+          $("color_mode").value = state.color.mode;
+          if (
+            [...$("palette_name").options].some(
+              (o) => o.value === state.color.palette_name,
+            )
+          )
+            $("palette_name").value = state.color.palette_name;
+          $("palette_manual_enabled").checked = !!state.color.manual_palette;
+          $("palette_size").value = state.color.palette_size;
+          $("palette_distribution").value = state.color.palette_distribution;
+          for (let i = 1; i <= 6; i++) {
+            $("palette_color_" + i).value =
+              state.color.palette_colors[
+                Math.min(i - 1, state.color.palette_colors.length - 1)
+              ] || "#ffffff";
+          }
+          $("colormap").value = state.color.colormap;
+          $("colormap_span_lo").value = state.color.colormap_span[0];
+          $("colormap_span_hi").value = state.color.colormap_span[1];
+          $("curve_opacity").value = state.color.curve_opacity;
+          $("num_curve_colors").value = state.color.num_curve_colors;
+          $("color_shift").value = state.color.color_shift;
+
+          $("background_mode").value = state.background.mode;
+          $("bg_solid_color").value = state.background.solid_color;
+          $("bg_linear_top").value = state.background.linear.top;
+          $("bg_linear_bottom").value = state.background.linear.bottom;
+          $("bg_linear_angle").value = state.background.linear.angle;
+          $("bg_radial_inner").value = state.background.radial.inner;
+          $("bg_radial_outer").value = state.background.radial.outer;
+          $("bg_radial_center_x").value = state.background.radial.center_x;
+          $("bg_radial_center_y").value = state.background.radial.center_y;
+          $("bg_radial_radius_bias").value =
+            state.background.radial.radius_bias;
+          $("bg_mesh_tl").value = state.background.mesh.tl;
+          $("bg_mesh_tr").value = state.background.mesh.tr;
+          $("bg_mesh_bl").value = state.background.mesh.bl;
+          $("bg_mesh_br").value = state.background.mesh.br;
+          $("bg_brightness").value = state.background.brightness;
+          $("bg_contrast").value = state.background.contrast;
+          $("bg_texture_strength").value = state.background.texture_strength;
+          $("bg_vignette_strength").value = state.background.vignette_strength;
+
+          $("line_width").value = state.style.line_width;
+          $("glow_layers").value = state.style.glow_layers;
+          $("glow_alpha").value = state.style.glow_alpha;
+          $("glow_scale").value = state.style.glow_scale;
+          $("main_alpha").value = state.style.main_alpha;
+          $("segment_blending").checked = !!state.style.segment_blending;
+        } finally {
+          isSyncing = false;
+        }
+        updateVisibility();
+        updateReadouts();
+        updatePreviewMeta();
+      }
+      function readUIIntoState(shouldValidate = true) {
+        let s = deepClone(state);
+        s.curve.family = $("family").value;
+        s.meta.artwork_preset = $("artwork_preset").value;
+        s.meta.style_preset = $("style_preset").value;
+        s.meta.palette_preset = $("palette_preset").value;
+        s.meta.background_preset = $("background_preset").value;
+        s.meta.seed = Math.round(Number($("seed").value || 0));
+        s.style.glow_macro = Number($("glow_macro").value);
+        s.curve.turns = Number($("turns").value);
+        s.curve.asymmetry = Number($("asymmetry").value);
+        s.curve.noise_strength = Number($("noise_strength").value);
+        s.curve.zoom = Number($("zoom").value);
+        const fam = s.curve.family;
+        if (fam === "lissajous") {
+          s.curve.params = {
+            a: Number($("liss_a").value),
+            b: Number($("liss_b").value),
+            delta: Number($("liss_delta").value),
+          };
+        } else if (fam === "rose") {
+          s.curve.params = {
+            k: Number($("rose_k").value),
+            radial_wobble: Number($("rose_radial_wobble").value),
+            wobble_freq: Number($("rose_wobble_freq").value),
+          };
+        } else if (fam === "epitrochoid") {
+          s.curve.params = {
+            R: Number($("epi_R").value),
+            r: Number($("epi_r").value),
+            d: Number($("epi_d").value),
+          };
+        } else if (fam === "burst") {
+          s.curve.params = {
+            amp1: Number($("burst_amp1").value),
+            amp2: Number($("burst_amp2").value),
+            f1: Number($("burst_f1").value),
+            f2: Number($("burst_f2").value),
+            delta: Number($("burst_delta").value),
+          };
+        }
+        s.color.mode = $("color_mode").value;
+        s.color.palette_name = $("palette_name").value;
+        s.color.manual_palette = $("palette_manual_enabled").checked;
+        s.color.palette_size = Math.round(Number($("palette_size").value));
+        s.color.palette_distribution = $("palette_distribution").value;
+        s.color.palette_colors = [];
+        for (let i = 1; i <= s.color.palette_size; i++)
+          s.color.palette_colors.push($("palette_color_" + i).value);
+        s.color.colormap = $("colormap").value;
+        s.color.colormap_span = [
+          Number($("colormap_span_lo").value),
+          Number($("colormap_span_hi").value),
+        ];
+        s.color.curve_opacity = Number($("curve_opacity").value);
+        s.color.num_curve_colors = Math.round(
+          Number($("num_curve_colors").value),
+        );
+        s.color.color_shift = Number($("color_shift").value);
+        s.background.mode = $("background_mode").value;
+        s.background.solid_color = $("bg_solid_color").value;
+        s.background.linear.top = $("bg_linear_top").value;
+        s.background.linear.bottom = $("bg_linear_bottom").value;
+        s.background.linear.angle = Number($("bg_linear_angle").value);
+        s.background.radial.inner = $("bg_radial_inner").value;
+        s.background.radial.outer = $("bg_radial_outer").value;
+        s.background.radial.center_x = Number($("bg_radial_center_x").value);
+        s.background.radial.center_y = Number($("bg_radial_center_y").value);
+        s.background.radial.radius_bias = Number(
+          $("bg_radial_radius_bias").value,
+        );
+        s.background.mesh.tl = $("bg_mesh_tl").value;
+        s.background.mesh.tr = $("bg_mesh_tr").value;
+        s.background.mesh.bl = $("bg_mesh_bl").value;
+        s.background.mesh.br = $("bg_mesh_br").value;
+        s.background.brightness = Number($("bg_brightness").value);
+        s.background.contrast = Number($("bg_contrast").value);
+        s.background.texture_strength = Number($("bg_texture_strength").value);
+        s.background.vignette_strength = Number(
+          $("bg_vignette_strength").value,
+        );
+        s.style.line_width = Number($("line_width").value);
+        s.style.glow_layers = Math.round(Number($("glow_layers").value));
+        s.style.glow_alpha = Number($("glow_alpha").value);
+        s.style.glow_scale = Number($("glow_scale").value);
+        s.style.main_alpha = Number($("main_alpha").value);
+        s.style.segment_blending = $("segment_blending").checked;
+        return shouldValidate ? validateSettings(s) : s;
+      }
+      function updateVisibility() {
+        const family = state.curve.family;
+        ["lissajous", "rose", "epitrochoid", "burst"].forEach((key) =>
+          $("curve_box_" + key).classList.toggle("hidden", key !== family),
+        );
+        const mode = state.color.mode;
+        $("color_box_palette").classList.toggle("hidden", mode !== "palette");
+        $("color_box_colormap").classList.toggle("hidden", mode !== "colormap");
+        const manual = state.color.manual_palette && mode === "palette";
+        $("palette_manual_block").classList.toggle("hidden", !manual);
+        for (let i = 1; i <= 6; i++)
+          $("palette_color_wrap_" + i).classList.toggle(
+            "hidden",
+            !(manual && i <= state.color.palette_size),
+          );
+        const bgMode = state.background.mode;
+        ["solid", "linear", "radial", "mesh"].forEach((key) =>
+          $("bg_box_" + key).classList.toggle("hidden", key !== bgMode),
+        );
+      }
+      function setStatus(message, kind = "") {
+        statusEl.textContent = message;
+        statusEl.className = "status" + (kind ? " " + kind : "");
+        activeToastKind = kind;
+      }
+      function updatePreviewMeta() {
+        previewMeta.textContent = `Seed ${state.meta.seed} · ${state.curve.family} · ${state.meta.artwork_preset}`;
+      }
+
+      function makeTheta(turns, points) {
+        const theta = new Float64Array(points);
+        const max = 2 * Math.PI * turns;
+        const denom = Math.max(1, points - 1);
+        for (let i = 0; i < points; i++) theta[i] = (max * i) / denom;
+        return theta;
+      }
+      function applyAsymmetry(x, y, theta, amount) {
+        if (amount <= 0) return;
+        for (let i = 0; i < x.length; i++) {
+          x[i] += amount * Math.sin(2.7 * theta[i] + 0.3);
+          y[i] += 0.7 * amount * Math.cos(3.9 * theta[i] + 1.1);
+        }
+      }
+      function applyNoise(x, y, strength, seed) {
+        if (strength <= 0) return;
+        const rng = new RNG(seed);
+        for (let i = 0; i < x.length; i++) {
+          x[i] += strength * rng.normal();
+          y[i] += strength * rng.normal();
+        }
+      }
+      function normalizeCurve(x, y) {
+        let scale = 1e-9;
+        for (let i = 0; i < x.length; i++) {
+          scale = Math.max(scale, Math.abs(x[i]), Math.abs(y[i]));
+        }
+        for (let i = 0; i < x.length; i++) {
+          x[i] /= scale;
+          y[i] /= scale;
+        }
+      }
+      function generateCurve(settings, points = DATA.POINTS) {
+        settings = validateSettings(settings);
+        const curve = settings.curve;
+        const p = curve.params;
+        const theta = makeTheta(curve.turns, points);
+        const x = new Float64Array(points);
+        const y = new Float64Array(points);
+        if (curve.family === "lissajous") {
+          for (let i = 0; i < points; i++) {
+            x[i] = Math.sin(p.a * theta[i] + p.delta);
+            y[i] = Math.sin(p.b * theta[i]);
+          }
+        } else if (curve.family === "rose") {
+          for (let i = 0; i < points; i++) {
+            const r =
+              Math.cos(p.k * theta[i]) *
+              (1 + p.radial_wobble * Math.sin(p.wobble_freq * theta[i]));
+            x[i] = r * Math.cos(theta[i]);
+            y[i] = r * Math.sin(theta[i]);
+          }
+        } else if (curve.family === "epitrochoid") {
+          for (let i = 0; i < points; i++) {
+            const R = p.R,
+              r = p.r,
+              d = p.d;
+            x[i] =
+              (R + r) * Math.cos(theta[i]) -
+              d * Math.cos(((R + r) / r) * theta[i]);
+            y[i] =
+              (R + r) * Math.sin(theta[i]) -
+              d * Math.sin(((R + r) / r) * theta[i]);
+          }
+        } else if (curve.family === "burst") {
+          for (let i = 0; i < points; i++) {
+            const r =
+              1 +
+              p.amp1 * Math.sin(p.f1 * theta[i] + p.delta) +
+              p.amp2 * Math.cos(p.f2 * theta[i]);
+            x[i] = r * Math.cos(theta[i]);
+            y[i] = r * Math.sin(theta[i]);
+          }
+        }
+        applyAsymmetry(x, y, theta, curve.asymmetry);
+        applyNoise(x, y, curve.noise_strength, settings.meta.seed);
+        normalizeCurve(x, y);
+        for (let i = 0; i < points; i++) {
+          x[i] *= curve.zoom;
+          y[i] *= curve.zoom;
+        }
+        return { x, y };
+      }
+      function interpolateColorSequence(colors, n) {
+        colors = [...colors];
+        n = Math.max(1, Math.round(n));
+        if (!colors.length) colors = deepClone(DATA.PALETTE_PRESETS.nebula);
+        if (colors.length === 1 || n === 1) return Array(n).fill(colors[0]);
+        const anchors = colors.map((_, i) => i / (colors.length - 1));
+        const paletteRgb = colors.map(hexToRgb01);
+        const out = [];
+        for (let i = 0; i < n; i++) {
+          const x = n === 1 ? 0 : i / (n - 1);
+          let idx = anchors.findIndex((v) => v >= x) - 1;
+          if (idx < 0) idx = anchors.length - 2;
+          idx = clamp(idx, 0, colors.length - 2);
+          const left = anchors[idx];
+          const right = anchors[idx + 1];
+          const t = right <= left ? 0 : (x - left) / (right - left);
+          out.push(
+            rgb01ToHex(blendRgb(paletteRgb[idx], paletteRgb[idx + 1], t)),
+          );
+        }
+        return out;
+      }
+      function applyColorShiftToList(colors, shift) {
+        shift = clamp(Number(shift || 0), -0.5, 0.5);
+        if (Math.abs(shift) < 1e-9) return [...colors];
+        return colors.map((c) => shiftColorHue(c, shift));
+      }
+      function sampleColormap(name, t) {
+        const stops = CMAPS[name] || CMAPS.viridis;
+        if (stops.length === 1) return stops[0];
+        const x = clamp(t, 0, 1) * (stops.length - 1);
+        const idx = Math.min(stops.length - 2, Math.floor(x));
+        const local = x - idx;
+        return rgb01ToHex(
+          blendRgb(hexToRgb01(stops[idx]), hexToRgb01(stops[idx + 1]), local),
+        );
+      }
+      function getPaletteColors(settings, n) {
+        const color = settings.color;
+        let palette = color.palette_colors.slice(
+          0,
+          Math.max(2, color.palette_size),
+        );
+        if (!palette.length) palette = deepClone(DATA.PALETTE_PRESETS.nebula);
+        const distribution = color.palette_distribution || "even_segments";
+        if (distribution === "gradient_blend")
+          return interpolateColorSequence(palette, n);
+        if (distribution === "weighted") {
+          const weights = palette.map((_, i) => palette.length - i);
+          const sum = weights.reduce((a, b) => a + b, 0);
+          const cumulative = [];
+          let acc = 0;
+          for (const w of weights) {
+            acc += w / sum;
+            cumulative.push(acc);
+          }
+          const out = [];
+          for (let i = 0; i < Math.max(1, n); i++) {
+            const x = (i + 0.5) / Math.max(1, n);
+            let idx = cumulative.findIndex((v) => x <= v);
+            if (idx < 0) idx = palette.length - 1;
+            out.push(palette[idx]);
+          }
+          return out;
+        }
+        if (n <= 1) return [palette[0]];
+        const out = [];
+        for (let i = 0; i < n; i++) {
+          const idx = Math.floor((i / n) * palette.length);
+          out.push(palette[Math.min(idx, palette.length - 1)]);
+        }
+        return out;
+      }
+      function getColormapColors(settings, n) {
+        const [lo, hi] = settings.color.colormap_span;
+        const out = [];
+        for (let i = 0; i < n; i++) {
+          const x = n === 1 ? lo : lerp(lo, hi, i / Math.max(1, n - 1));
+          out.push(sampleColormap(settings.color.colormap, x));
+        }
+        return out;
+      }
+      function getCurveColors(settings, nSegments) {
+        const base =
+          settings.color.mode === "palette"
+            ? getPaletteColors(settings, nSegments)
+            : getColormapColors(settings, nSegments);
+        return applyColorShiftToList(base, settings.color.color_shift);
+      }
+      function buildDrawPieces(x, y, settings, forExport = false) {
+        const colors = getCurveColors(
+          settings,
+          Math.max(1, settings.color.num_curve_colors),
+        );
+        if (colors.length <= 1)
+          return [
+            {
+              start: 0,
+              end: x.length,
+              color: colors[0] || settings.color.curve_color,
+            },
+          ];
+        if (settings.style.segment_blending) {
+          const desired = forExport ? 420 : 180;
+          const count = Math.max(
+            colors.length,
+            Math.min(desired, x.length - 1),
+          );
+          const blended = interpolateColorSequence(colors, count);
+          const pieces = [];
+          for (let i = 0; i < count; i++) {
+            const start = Math.floor((i / count) * (x.length - 1));
+            const end = Math.max(
+              start + 2,
+              Math.floor(((i + 1) / count) * (x.length - 1)) + 1,
+            );
+            pieces.push({ start, end, color: blended[i] });
+          }
+          return pieces;
+        }
+        const pieces = [];
+        const idxs = Array.from({ length: colors.length + 1 }, (_, i) =>
+          Math.floor((i / colors.length) * (x.length - 1)),
+        );
+        for (let i = 0; i < colors.length; i++) {
+          const start = idxs[i];
+          const end = Math.max(idxs[i + 1], start + 2);
+          pieces.push({ start, end, color: colors[i] });
+        }
+        return pieces;
+      }
+      function pointToCanvas(x, y, w, h) {
+        return [((x + 1.8) / 3.6) * w, h - ((y + 1.8) / 3.6) * h];
+      }
+      function traceCanvasPath(ctx, x, y, start, end, w, h) {
+        const [px, py] = pointToCanvas(x[start], y[start], w, h);
+        ctx.beginPath();
+        ctx.moveTo(px, py);
+        for (let i = start + 1; i < end; i++) {
+          const [cx, cy] = pointToCanvas(x[i], y[i], w, h);
+          ctx.lineTo(cx, cy);
+        }
+      }
+      function renderBackgroundCanvas(settings, width, height) {
+        const key = JSON.stringify([
+          settings.background,
+          settings.meta.seed,
+          width,
+          height,
+        ]);
+        if (bgCache.has(key)) return bgCache.get(key);
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        const img = ctx.createImageData(width, height);
+        const d = img.data;
+        const bg = settings.background;
+        const rng = new RNG(settings.meta.seed + 101);
+        const top = bg.linear ? hexToRgb01(bg.linear.top) : [0, 0, 0];
+        const bottom = bg.linear ? hexToRgb01(bg.linear.bottom) : [0, 0, 0];
+        const solid = hexToRgb01(bg.solid_color || "#000000");
+        const inner = bg.radial ? hexToRgb01(bg.radial.inner) : [0, 0, 0];
+        const outer = bg.radial ? hexToRgb01(bg.radial.outer) : [0, 0, 0];
+        const tl = bg.mesh ? hexToRgb01(bg.mesh.tl) : [0, 0, 0];
+        const tr = bg.mesh ? hexToRgb01(bg.mesh.tr) : [0, 0, 0];
+        const bl = bg.mesh ? hexToRgb01(bg.mesh.bl) : [0, 0, 0];
+        const br = bg.mesh ? hexToRgb01(bg.mesh.br) : [0, 0, 0];
+        const angle = ((bg.linear?.angle ?? 90) * Math.PI) / 180;
+        const minProj = -Math.abs(Math.cos(angle)) - Math.abs(Math.sin(angle));
+        const maxProj = Math.abs(Math.cos(angle)) + Math.abs(Math.sin(angle));
+        const radialMax = Math.max(
+          Math.hypot(0 - bg.radial.center_x, 0 - bg.radial.center_y),
+          Math.hypot(1 - bg.radial.center_x, 0 - bg.radial.center_y),
+          Math.hypot(0 - bg.radial.center_x, 1 - bg.radial.center_y),
+          Math.hypot(1 - bg.radial.center_x, 1 - bg.radial.center_y),
+          1e-9,
+        );
+        let ptr = 0;
+        for (let yy = 0; yy < height; yy++) {
+          const yn01 = yy / Math.max(1, height - 1);
+          const yn = yn01 * 2 - 1;
+          const vy = yn01 * 2 - 1;
+          for (let xx = 0; xx < width; xx++) {
+            const xn01 = xx / Math.max(1, width - 1);
+            const xn = xn01 * 2 - 1;
+            let rgb;
+            if (bg.mode === "solid") {
+              rgb = [...solid];
+            } else if (bg.mode === "linear") {
+              const projection = Math.cos(angle) * xn + Math.sin(angle) * yn;
+              const t =
+                (projection - minProj) / Math.max(1e-9, maxProj - minProj);
+              rgb = blendRgb(bottom, top, clamp(t, 0, 1));
+            } else if (bg.mode === "radial") {
+              let radius = Math.hypot(
+                xn01 - bg.radial.center_x,
+                yn01 - bg.radial.center_y,
+              );
+              radius = clamp(
+                (radius * bg.radial.radius_bias) / radialMax,
+                0,
+                1,
+              );
+              rgb = blendRgb(inner, outer, radius);
+            } else {
+              const topMix = blendRgb(tl, tr, xn01);
+              const bottomMix = blendRgb(bl, br, xn01);
+              rgb = blendRgb(bottomMix, topMix, yn01);
+            }
+            rgb = rgb.map((v) =>
+              clamp((v * bg.brightness - 0.5) * bg.contrast + 0.5, 0, 1),
+            );
+            if (bg.texture_strength > 0) {
+              const n0 = rng.normal() * bg.texture_strength * 0.18;
+              rgb = rgb.map((v) => clamp(v + n0, 0, 1));
+            }
+            if (bg.vignette_strength > 0) {
+              const vx = (xx / Math.max(1, width - 1)) * 2 - 1;
+              const vy2 = (yy / Math.max(1, height - 1)) * 2 - 1;
+              const radius = Math.min(1, Math.hypot(vx, vy2));
+              const vignette = 1 - bg.vignette_strength * radius;
+              rgb = rgb.map((v) => clamp(v * vignette, 0, 1));
+            }
+            d[ptr++] = Math.round(rgb[0] * 255);
+            d[ptr++] = Math.round(rgb[1] * 255);
+            d[ptr++] = Math.round(rgb[2] * 255);
+            d[ptr++] = 255;
+          }
+        }
+        ctx.putImageData(img, 0, 0);
+        bgCache.set(key, canvas);
+        if (bgCache.size > 12) bgCache.delete(bgCache.keys().next().value);
+        return canvas;
+      }
+      function ensureCanvasSize() {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = previewWrap.getBoundingClientRect();
+        const size = Math.max(
+          640,
+          Math.floor(Math.min(rect.width, rect.height || rect.width)),
+        );
+        const w = Math.floor(size * dpr);
+        const h = Math.floor(size * dpr);
+        if (previewCanvas.width !== w || previewCanvas.height !== h) {
+          previewCanvas.width = w;
+          previewCanvas.height = h;
+        }
+        return { w, h, cssSize: size, dpr };
+      }
+      function renderPreview() {
+        const { w, h, dpr } = ensureCanvasSize();
+        const ctx = previewCanvas.getContext("2d");
+        ctx.clearRect(0, 0, w, h);
+        const bgCanvas = renderBackgroundCanvas(state, 440, 440);
+        ctx.drawImage(bgCanvas, 0, 0, w, h);
+        const previewPoints = state.style.segment_blending ? 4200 : 7000;
+        const curve = generateCurve(state, previewPoints);
+        const pieces = buildDrawPieces(curve.x, curve.y, state, false);
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        const scale = Math.min(w, h) / 700;
+        const glowBoost =
+          Math.max(0, state.style.glow_layers) *
+          state.style.glow_scale *
+          2.1 *
+          scale;
+        for (const piece of pieces) {
+          traceCanvasPath(ctx, curve.x, curve.y, piece.start, piece.end, w, h);
+          if (state.style.glow_layers > 0 && state.style.glow_alpha > 0) {
+            ctx.save();
+            ctx.strokeStyle = rgbaString(
+              hexToRgb01(piece.color),
+              Math.min(1, state.style.glow_alpha * 2.5),
+            );
+            ctx.lineWidth =
+              (state.style.line_width +
+                state.style.glow_scale *
+                  Math.max(1, state.style.glow_layers * 0.28)) *
+              scale;
+            ctx.shadowColor = rgbaString(
+              hexToRgb01(piece.color),
+              Math.min(1, state.style.glow_alpha * 7),
+            );
+            ctx.shadowBlur = glowBoost;
+            ctx.stroke();
+            ctx.restore();
+            traceCanvasPath(
+              ctx,
+              curve.x,
+              curve.y,
+              piece.start,
+              piece.end,
+              w,
+              h,
+            );
+          }
+          ctx.save();
+          ctx.strokeStyle = rgbaString(
+            hexToRgb01(piece.color),
+            Math.min(state.color.curve_opacity, state.style.main_alpha),
+          );
+          ctx.lineWidth = state.style.line_width * scale;
+          ctx.stroke();
+          ctx.restore();
+        }
+      }
+      function scheduleRender() {
+        if (renderQueued) return;
+        renderQueued = true;
+        requestAnimationFrame(() => {
+          renderQueued = false;
+          try {
+            renderPreview();
+          } catch (err) {
+            console.error(err);
+            setStatus("Render error: " + err.message, "warn");
+          }
+        });
+      }
+      function pathSliceToSvg(x, y, start, end, width, height) {
+        let out = "";
+        for (let i = start; i < end; i++) {
+          const [px, py] = pointToCanvas(x[i], y[i], width, height);
+          out +=
+            (i === start ? "M " : " L ") + px.toFixed(3) + " " + py.toFixed(3);
+        }
+        return out;
+      }
+      function buildSvgMarkup(settings, width = 1600, height = 1600) {
+        const bgCanvas = renderBackgroundCanvas(settings, 900, 900);
+        const bgData = bgCanvas.toDataURL("image/png");
+        const curve = generateCurve(
+          settings,
+          settings.style.segment_blending ? 5200 : DATA.POINTS,
+        );
+        const pieces = buildDrawPieces(curve.x, curve.y, settings, true);
+        const mainAlpha = Math.min(
+          settings.color.curve_opacity,
+          settings.style.main_alpha,
+        );
+        const lines = [];
+        lines.push(
+          `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">`,
+        );
+        lines.push(`<rect width="100%" height="100%" fill="#000"/>`);
+        lines.push(
+          `<image href="${bgData}" x="0" y="0" width="${width}" height="${height}" preserveAspectRatio="none"/>`,
+        );
+        for (const piece of pieces) {
+          const d = pathSliceToSvg(
+            curve.x,
+            curve.y,
+            piece.start,
+            piece.end,
+            width,
+            height,
+          );
+          for (let i = settings.style.glow_layers; i > 0; i--) {
+            const sw =
+              (settings.style.line_width + i * settings.style.glow_scale) *
+              (width / 700);
+            lines.push(
+              `<path d="${d}" fill="none" stroke="${piece.color}" stroke-opacity="${settings.style.glow_alpha.toFixed(5)}" stroke-width="${sw.toFixed(3)}" stroke-linecap="round" stroke-linejoin="round"/>`,
+            );
+          }
+          lines.push(
+            `<path d="${d}" fill="none" stroke="${piece.color}" stroke-opacity="${mainAlpha.toFixed(5)}" stroke-width="${(settings.style.line_width * (width / 700)).toFixed(3)}" stroke-linecap="round" stroke-linejoin="round"/>`,
+          );
+        }
+        lines.push(`</svg>`);
+        return lines.join("");
+      }
+      function buildExportFilename(ext = "png") {
+        return `parametric_art_${state.curve.family}_${state.meta.artwork_preset}_${nowTimestampStr()}.${ext}`;
+      }
+      async function saveCurrentPng() {
+        if (previewCanvas.toBlob) {
+          const blob = await new Promise((resolve) =>
+            previewCanvas.toBlob(resolve, "image/png"),
+          );
+          downloadBlob(buildExportFilename("png"), blob);
+        } else {
+          const dataUrl = previewCanvas.toDataURL("image/png");
+          const a = document.createElement("a");
+          a.href = dataUrl;
+          a.download = buildExportFilename("png");
+          a.click();
+        }
+        setStatus("Saved PNG export.", "good");
+      }
+      function saveCurrentSvg() {
+        const svgMarkup = buildSvgMarkup(state);
+        const blob = new Blob([svgMarkup], {
+          type: "image/svg+xml;charset=utf-8",
+        });
+        downloadBlob(buildExportFilename("svg"), blob);
+        setStatus("Saved SVG export.", "good");
+      }
+
+      function applySettingsAndSync(nextState, message = "") {
+        state = validateSettings(nextState);
+        writeStateToUI();
+        if (message) setStatus(message, "good");
+        scheduleRender();
+      }
+      function nextRandomSeed(seed) {
+        const rng = new RNG((Number(seed) + 911) >>> 0);
+        return rng.integers(0, 10000);
+      }
+
+      function handleGenericChange(changedKey) {
+        if (isSyncing) return;
+        let next = readUIIntoState(false);
+        if (changedKey === "glow_macro") {
+          next = applyGlowMacro(next);
+        } else if (STYLE_WIDGET_KEYS.has(changedKey)) {
+          next = syncMacroControls(next);
+        }
+        next = validateSettings(next);
+        next = markPresetsCustomIfNeeded(next, [changedKey]);
+        applySettingsAndSync(next);
+      }
+      function handleFamilyChange() {
+        if (isSyncing) return;
+        let next = readUIIntoState();
+        next.curve.params = makeDefaultCurveParams(next.curve.family);
+        next = markPresetsCustomIfNeeded(next, ["family"]);
+        applySettingsAndSync(next, `Family set to ${next.curve.family}.`);
+      }
+      function handleArtworkPresetChange() {
+        if (isSyncing) return;
+        applySettingsAndSync(
+          applyArtworkPreset(state, $("artwork_preset").value),
+          `Applied artwork preset: ${$("artwork_preset").value}.`,
+        );
+      }
+      function handleStylePresetChange() {
+        if (isSyncing) return;
+        applySettingsAndSync(
+          applyStylePreset(readUIIntoState(), $("style_preset").value),
+          `Applied style preset: ${$("style_preset").value}.`,
+        );
+      }
+      function handlePalettePresetChange() {
+        if (isSyncing) return;
+        applySettingsAndSync(
+          applyPalettePreset(readUIIntoState(), $("palette_preset").value),
+          `Applied palette preset: ${$("palette_preset").value}.`,
+        );
+      }
+      function handleBackgroundPresetChange() {
+        if (isSyncing) return;
+        applySettingsAndSync(
+          applyBackgroundPreset(
+            readUIIntoState(),
+            $("background_preset").value,
+          ),
+          `Applied background preset: ${$("background_preset").value}.`,
+        );
+      }
+
+      function connectEvents() {
+        $("family").addEventListener("change", handleFamilyChange);
+        $("artwork_preset").addEventListener(
+          "change",
+          handleArtworkPresetChange,
+        );
+        $("style_preset").addEventListener("change", handleStylePresetChange);
+        $("palette_preset").addEventListener(
+          "change",
+          handlePalettePresetChange,
+        );
+        $("background_preset").addEventListener(
+          "change",
+          handleBackgroundPresetChange,
+        );
+
+        const watchKeys = [
+          "seed",
+          "glow_macro",
+          "turns",
+          "asymmetry",
+          "noise_strength",
+          "zoom",
+          "liss_a",
+          "liss_b",
+          "liss_delta",
+          "rose_k",
+          "rose_radial_wobble",
+          "rose_wobble_freq",
+          "epi_R",
+          "epi_r",
+          "epi_d",
+          "burst_amp1",
+          "burst_amp2",
+          "burst_f1",
+          "burst_f2",
+          "burst_delta",
+          "color_mode",
+          "palette_name",
+          "palette_manual_enabled",
+          "palette_size",
+          "palette_distribution",
+          "colormap",
+          "colormap_span_lo",
+          "colormap_span_hi",
+          "curve_opacity",
+          "num_curve_colors",
+          "color_shift",
+          "background_mode",
+          "bg_solid_color",
+          "bg_linear_top",
+          "bg_linear_bottom",
+          "bg_linear_angle",
+          "bg_radial_inner",
+          "bg_radial_outer",
+          "bg_radial_center_x",
+          "bg_radial_center_y",
+          "bg_radial_radius_bias",
+          "bg_mesh_tl",
+          "bg_mesh_tr",
+          "bg_mesh_bl",
+          "bg_mesh_br",
+          "bg_brightness",
+          "bg_contrast",
+          "bg_texture_strength",
+          "bg_vignette_strength",
+          "line_width",
+          "glow_layers",
+          "glow_alpha",
+          "glow_scale",
+          "main_alpha",
+          "segment_blending",
+          "palette_color_1",
+          "palette_color_2",
+          "palette_color_3",
+          "palette_color_4",
+          "palette_color_5",
+          "palette_color_6",
+        ];
+        watchKeys.forEach((key) => {
+          const el = $(key);
+          const evt =
+            el.type === "range" || el.type === "number" || el.type === "color"
+              ? "input"
+              : "change";
+          el.addEventListener(evt, () => {
+            updateReadouts();
+            handleGenericChange(key);
+          });
+          if (
+            evt === "input" &&
+            el.tagName === "INPUT" &&
+            (el.type === "checkbox" || el.tagName === "SELECT")
+          ) {
+            el.addEventListener("change", () => handleGenericChange(key));
+          }
+        });
+
+        $("btn_randomize_all").addEventListener("click", () => {
+          let base = readUIIntoState(false);
+          base.meta.seed = nextRandomSeed(base.meta.seed);
+          applySettingsAndSync(
+            randomizeSettings(
+              base,
+              "all",
+              DATA.DEFAULT_RANDOMIZATION_INTENSITY,
+            ),
+            "Randomized full composition.",
+          );
+        });
+        $("btn_randomize_curve").addEventListener("click", () => {
+          let base = readUIIntoState(false);
+          base.meta.seed = nextRandomSeed(base.meta.seed);
+          let next = randomizeCurve(
+            base,
+            DATA.DEFAULT_RANDOMIZATION_INTENSITY,
+            false,
+          );
+          next.meta.artwork_preset = "custom";
+          applySettingsAndSync(next, "Randomized curve settings.");
+        });
+        $("btn_randomize_colors").addEventListener("click", () => {
+          let base = readUIIntoState(false);
+          base.meta.seed = nextRandomSeed(base.meta.seed);
+          applySettingsAndSync(
+            randomizePalette(base, DATA.DEFAULT_RANDOMIZATION_INTENSITY),
+            "Randomized colors.",
+          );
+        });
+        $("btn_randomize_background").addEventListener("click", () => {
+          let base = readUIIntoState(false);
+          base.meta.seed = nextRandomSeed(base.meta.seed);
+          applySettingsAndSync(
+            randomizeBackground(base, DATA.DEFAULT_RANDOMIZATION_INTENSITY),
+            "Randomized background.",
+          );
+        });
+        $("btn_save_png").addEventListener("click", saveCurrentPng);
+        $("btn_save_svg").addEventListener("click", saveCurrentSvg);
+        $("theme_select").addEventListener("change", handleThemeChange);
+
+        new ResizeObserver(() => scheduleRender()).observe(previewWrap);
+        window.addEventListener("resize", scheduleRender);
+      }
+
+      populateSelects();
+      connectEvents();
+      applyTheme("default");
+      writeStateToUI();
+      scheduleRender();
+      setStatus("Ready.");
+    </script>
+  </body>
+</html>

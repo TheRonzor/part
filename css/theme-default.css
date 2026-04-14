@@ -1,0 +1,68 @@
+:root {
+  --bg: #0d1016;
+  --panel: #141923;
+  --panel-2: #1a2130;
+  --panel-3: #222c3f;
+  --border: rgba(255, 255, 255, 0.09);
+  --text: #eef2ff;
+  --muted: #aeb8cf;
+  --accent: #79a8ff;
+  --accent-2: #8ae6c6;
+  --danger: #ff7b91;
+  --shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+  --radius: 18px;
+  --radius-sm: 12px;
+
+  --page-bg: linear-gradient(180deg, #0b0f16, #0f1420 55%, #0b1018);
+  --panel-bg: rgba(20, 25, 35, 0.82);
+  --panel-border: rgba(255, 255, 255, 0.09);
+  --panel-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+
+  --divider: rgba(255, 255, 255, 0.08);
+  --preview-surface: #090c12;
+  --preview-surface-border: rgba(255, 255, 255, 0.08);
+
+  --field-bg: rgba(255, 255, 255, 0.04);
+  --field-border: rgba(255, 255, 255, 0.1);
+
+  --button-bg: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.02)
+  );
+  --button-border: rgba(255, 255, 255, 0.1);
+  --button-hover-border: rgba(255, 255, 255, 0.18);
+
+  --button-primary-bg: linear-gradient(
+    180deg,
+    rgba(121, 168, 255, 0.34),
+    rgba(121, 168, 255, 0.16)
+  );
+  --button-primary-border: rgba(121, 168, 255, 0.38);
+
+  --button-success-bg: linear-gradient(
+    180deg,
+    rgba(138, 230, 198, 0.28),
+    rgba(138, 230, 198, 0.12)
+  );
+  --button-success-border: rgba(138, 230, 198, 0.34);
+
+  --details-bg: rgba(255, 255, 255, 0.03);
+  --details-open-bg: rgba(255, 255, 255, 0.045);
+  --details-border: rgba(255, 255, 255, 0.08);
+
+  --subgroup-bg: rgba(255, 255, 255, 0.03);
+  --subgroup-border: rgba(255, 255, 255, 0.06);
+
+  --status-bg: rgba(255, 255, 255, 0.04);
+  --status-border: rgba(255, 255, 255, 0.08);
+  --status-text: #aeb8cf;
+  --status-good-border: rgba(138, 230, 198, 0.22);
+  --status-good-text: #dcfff3;
+  --status-warn-border: rgba(255, 123, 145, 0.22);
+  --status-warn-text: #ffe0e6;
+
+  --theme-select-bg: rgba(255, 255, 255, 0.04);
+  --theme-select-border: rgba(255, 255, 255, 0.1);
+  --theme-select-hover-border: rgba(255, 255, 255, 0.18);
+}
