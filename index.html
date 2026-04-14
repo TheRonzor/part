@@ -88,7 +88,7 @@
       }
       .main {
         display: grid;
-        grid-template-columns: minmax(400px, 0.67fr) 430px;
+        grid-template-columns: minmax(400px, 0.5fr) 430px;
         gap: 18px;
         align-items: start;
       }
@@ -500,7 +500,7 @@
             <button id="btn_save_svg">Save SVG</button>
           </div>
 
-          <details open>
+          <details>
             <summary>Curve Details</summary>
             <div class="panel-body">
               <div id="curve_box_lissajous" class="subgroup">
@@ -706,7 +706,7 @@
             </div>
           </details>
 
-          <details open>
+          <details>
             <summary>Color &amp; Palette</summary>
             <div class="panel-body">
               <div class="control">
@@ -1137,14 +1137,9 @@
                 />
               </div>
               <label class="inline-check"
-                ><span>Segment blending</span
+                ><span>Mystery Switch</span
                 ><input id="segment_blending" type="checkbox"
               /></label>
-              <div class="muted-note">
-                The canvas preview approximates the notebook’s glow and blended
-                segments for speed; SVG export keeps the curve vector-based and
-                preserves the overall look.
-              </div>
             </div>
           </details>
         </div>
@@ -3162,7 +3157,7 @@
         const dpr = window.devicePixelRatio || 1;
         const rect = previewWrap.getBoundingClientRect();
         const size = Math.max(
-          320,
+          640,
           Math.floor(Math.min(rect.width, rect.height || rect.width)),
         );
         const w = Math.floor(size * dpr);
