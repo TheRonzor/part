@@ -271,6 +271,18 @@ canvas#preview {
   width: 100%;
 }
 
+/* .control input[type="number"],
+.control select,
+.control input[type="color"] {
+  width: 100%;
+  border: 1px solid var(--field-border);
+  border-radius: 12px;
+  background: var(--field-bg);
+  color: var(--field-text);
+  padding: 10px 12px;
+  font: inherit;
+} */
+
 .control input[type="number"],
 .control select,
 .control input[type="color"] {
@@ -281,6 +293,21 @@ canvas#preview {
   color: var(--field-text);
   padding: 10px 12px;
   font: inherit;
+}
+
+.control select,
+.theme-select {
+  background: #1a2130;
+  color: var(--text);
+  color-scheme: dark;
+}
+
+.control select option,
+.control select optgroup,
+.theme-select option,
+.theme-select optgroup {
+  background: #1a2130;
+  color: var(--text);
 }
 
 .control input[type="number"]::-webkit-outer-spin-button,
