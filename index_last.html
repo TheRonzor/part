@@ -159,7 +159,7 @@
           </div>
 
           <div class="button-row">
-            <button id="btn_save_png" class="success">Download Image</button>
+            <button id="btn_save_png" class="success">Save Image</button>
             <!-- <button id="btn_save_svg">Save SVG</button> -->
           </div>
 
@@ -960,7 +960,7 @@
           nebula: {
             curve: {
               family: "lissajous",
-              turns: 12.0,
+              turns: 3.0,
               asymmetry: 0.1,
               noise_strength: 0.002,
               params: { a: 3, b: 2, delta: 1.8 },
@@ -1282,12 +1282,8 @@
         ember: "./css/theme-ember.css",
         noir: "./css/theme-noir.css",
       };
-      const PNG_EXPORT_SIZE = 2048;
 
-      let state = applyArtworkPreset(
-        validateSettings(deepClone(DATA.DEFAULT_SETTINGS)),
-        DATA.DEFAULT_SETTINGS.meta.artwork_preset,
-      );
+      let state = validateSettings(deepClone(DATA.DEFAULT_SETTINGS));
       let isSyncing = false;
       let renderQueued = false;
       let bgCache = new Map();
@@ -2856,36 +2852,25 @@
         }
         return { w, h, cssSize: size, dpr };
       }
-      function renderSceneToCanvas(canvas, width, height) {
-        const ctx = canvas.getContext("2d");
-        ctx.clearRect(0, 0, width, height);
-        const bgCanvas = renderBackgroundCanvas(
-          state,
-          Math.max(440, width),
-          Math.max(440, height),
-        );
-        ctx.drawImage(bgCanvas, 0, 0, width, height);
+      function renderPreview() {
+        const { w, h, dpr } = ensureCanvasSize();
+        const ctx = previewCanvas.getContext("2d");
+        ctx.clearRect(0, 0, w, h);
+        const bgCanvas = renderBackgroundCanvas(state, 440, 440);
+        ctx.drawImage(bgCanvas, 0, 0, w, h);
         const previewPoints = state.style.segment_blending ? 4200 : 7000;
         const curve = generateCurve(state, previewPoints);
         const pieces = buildDrawPieces(curve.x, curve.y, state, false);
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
-        const scale = Math.min(width, height) / 700;
+        const scale = Math.min(w, h) / 700;
         const glowBoost =
           Math.max(0, state.style.glow_layers) *
           state.style.glow_scale *
           2.1 *
           scale;
         for (const piece of pieces) {
-          traceCanvasPath(
-            ctx,
-            curve.x,
-            curve.y,
-            piece.start,
-            piece.end,
-            width,
-            height,
-          );
+          traceCanvasPath(ctx, curve.x, curve.y, piece.start, piece.end, w, h);
           if (state.style.glow_layers > 0 && state.style.glow_alpha > 0) {
             ctx.save();
             ctx.strokeStyle = rgbaString(
@@ -2910,8 +2895,8 @@
               curve.y,
               piece.start,
               piece.end,
-              width,
-              height,
+              w,
+              h,
             );
           }
           ctx.save();
@@ -2923,10 +2908,6 @@
           ctx.stroke();
           ctx.restore();
         }
-      }
-      function renderPreview() {
-        const { w, h } = ensureCanvasSize();
-        renderSceneToCanvas(previewCanvas, w, h);
       }
       function scheduleRender() {
         if (renderQueued) return;
@@ -2998,26 +2979,19 @@
         return `parametric_art_${state.curve.family}_${state.meta.artwork_preset}_${nowTimestampStr()}.${ext}`;
       }
       async function saveCurrentPng() {
-        const exportCanvas = document.createElement("canvas");
-        exportCanvas.width = PNG_EXPORT_SIZE;
-        exportCanvas.height = PNG_EXPORT_SIZE;
-        renderSceneToCanvas(exportCanvas, PNG_EXPORT_SIZE, PNG_EXPORT_SIZE);
-        if (exportCanvas.toBlob) {
+        if (previewCanvas.toBlob) {
           const blob = await new Promise((resolve) =>
-            exportCanvas.toBlob(resolve, "image/png"),
+            previewCanvas.toBlob(resolve, "image/png"),
           );
           downloadBlob(buildExportFilename("png"), blob);
         } else {
-          const dataUrl = exportCanvas.toDataURL("image/png");
+          const dataUrl = previewCanvas.toDataURL("image/png");
           const a = document.createElement("a");
           a.href = dataUrl;
           a.download = buildExportFilename("png");
           a.click();
         }
-        setStatus(
-          `Saved ${PNG_EXPORT_SIZE}×${PNG_EXPORT_SIZE} PNG export.`,
-          "good",
-        );
+        setStatus("Saved PNG export.", "good");
       }
       function saveCurrentSvg() {
         const svgMarkup = buildSvgMarkup(state);
@@ -3228,7 +3202,7 @@
           );
         });
         $("btn_save_png").addEventListener("click", saveCurrentPng);
-        <!-- $("btn_save_svg").addEventListener("click", saveCurrentSvg); -->
+        $("btn_save_svg").addEventListener("click", saveCurrentSvg);
         $("theme_select").addEventListener("change", handleThemeChange);
 
         new ResizeObserver(() => scheduleRender()).observe(previewWrap);

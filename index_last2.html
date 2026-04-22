@@ -159,8 +159,8 @@
           </div>
 
           <div class="button-row">
-            <button id="btn_save_png" class="success">Download Image</button>
-            <!-- <button id="btn_save_svg">Save SVG</button> -->
+            <button id="btn_save_png" class="success">Save PNG</button>
+            <button id="btn_save_svg">Save SVG</button>
           </div>
 
           <details>
@@ -1115,18 +1115,18 @@
           },
           curve: {
             family: "lissajous",
-            turns: 3.0,
+            turns: 12.0,
             asymmetry: 0.1,
-            noise_strength: 0.002,
+            noise_strength: 0.001,
             zoom: 1.0,
-            params: { a: 3.0, b: 2.0, delta: 1.5707963267948966 },
+            params: { a: 3.0, b: 2.0, delta: 1.618 },
           },
           style: {
-            glow_macro: 0.6,
+            glow_macro: 0.7,
             line_width: 1.6,
-            glow_layers: 8,
-            glow_alpha: 0.055,
-            glow_scale: 2.0,
+            glow_layers: 10,
+            glow_alpha: 0.12,
+            glow_scale: 2.4,
             main_alpha: 0.95,
             segment_blending: true,
           },
@@ -1284,10 +1284,7 @@
       };
       const PNG_EXPORT_SIZE = 2048;
 
-      let state = applyArtworkPreset(
-        validateSettings(deepClone(DATA.DEFAULT_SETTINGS)),
-        DATA.DEFAULT_SETTINGS.meta.artwork_preset,
-      );
+      let state = validateSettings(deepClone(DATA.DEFAULT_SETTINGS));
       let isSyncing = false;
       let renderQueued = false;
       let bgCache = new Map();
@@ -2964,7 +2961,7 @@
         );
         const lines = [];
         lines.push(
-          `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">`,
+          `<svg xmlns="https://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">`,
         );
         lines.push(`<rect width="100%" height="100%" fill="#000"/>`);
         lines.push(
@@ -3228,7 +3225,7 @@
           );
         });
         $("btn_save_png").addEventListener("click", saveCurrentPng);
-        <!-- $("btn_save_svg").addEventListener("click", saveCurrentSvg); -->
+        $("btn_save_svg").addEventListener("click", saveCurrentSvg);
         $("theme_select").addEventListener("change", handleThemeChange);
 
         new ResizeObserver(() => scheduleRender()).observe(previewWrap);
